@@ -1,0 +1,22 @@
+.avatar {
+  display: block;
+  margin: 1em auto;
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+  object-fit: cover;
+}
+
+.profileText {
+  text-align: center;
+  font-size: small;
+}
+
+.weekContainer {
+  margin: 0;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+}

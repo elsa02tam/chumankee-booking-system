@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chu Man Kee Limited</title>
+
+    <base href="/" />
+
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <link rel="icon" type="image/png" href="assets/company_logo.png" />
+
+    <!-- add to homescreen for ios -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <style>
+      ion-navbar.toolbar.toolbar-ios.statusbar-padding,
+      ion-navbar.toolbar-ios ion-title.title-ios,
+      ion-toolbar.toolbar.toolbar-ios.statusbar-padding,
+      ion-toolbar.toolbar-ios ion-title.title-ios {
+        padding-top: constant(safe-area-inset-top);
+        padding-top: env(safe-area-inset-top);
+      }
+    </style>
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: '1929975814034708',
+          autoLogAppEvents: true,
+          xfbml: true,
+          version: 'v17.0',
+        })
+      }
+    </script>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
+  </head>
+
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

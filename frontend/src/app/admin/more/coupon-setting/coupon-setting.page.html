@@ -1,0 +1,127 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Coupon Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data"></ion-content>
+<ion-content *ngIf="data">
+  <ion-segment [(ngModel)]="tab" (ngModelChange)="applyFilter()">
+    <ion-segment-button value="all">{{t('All')}}</ion-segment-button>
+    <ion-segment-button value="booking"
+      >{{t('For Booking')}}</ion-segment-button
+    >
+    <ion-segment-button value="order">{{t('For Product')}}</ion-segment-button>
+  </ion-segment>
+
+  <ng-container>
+    <div
+      *ngIf="coupons?.length == 0"
+      style="display: flex; justify-content: center; color: red; margin: 2rem"
+    >
+      *{{t('No Matched Coupons')}}*
+    </div>
+
+    <ion-buttons style="display: flex; justify-content: center; margin: 1rem 0">
+      <ion-button (click)="addCoupon()" fill="outline" color="tertiary"
+        >{{t('Add Coupon')}}</ion-button
+      >
+    </ion-buttons>
+
+    <ion-list *ngFor="let coupon of coupons; let i = index">
+      <ion-card class="cardContainer">
+        <div class="cardHeader">{{t('Coupon ID')}} #{{coupon.id}}</div>
+        <ion-item>
+          <ion-label position="stacked">{{t('Promo Code')}}</ion-label>
+          <ion-input [(ngModel)]="coupon.coupon_code"></ion-input>
+        </ion-item>
+        <!-- Email -->
+        <ion-item>
+          <ion-label position="stacked">{{t('Email')}}</ion-label>
+          <ion-input
+            type="text"
+            placeholder="Type Email"
+            [(ngModel)]="email"
+          ></ion-input>
+          <ion-button slot="end" (click)="sendPromoteEmail(coupon)"
+            >{{t('Sent Email')}}</ion-button
+          >
+        </ion-item>
+        <!-- Email -->
+
+        <ion-item>
+          <ion-label position="stacked">{{t('Quota')}}</ion-label>
+          <ion-input
+            [(ngModel)]="coupon.quota"
+            [placeholder]="t('Enter number')"
+            type="number"
+            min="0"
+            step="1"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">{{t('Discount Amount')}}</ion-label>
+          <ion-input
+            [(ngModel)]="coupon.discount_amount"
+            [placeholder]="t('Enter number')"
+            type="number"
+            min="0"
+            step="1"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">{{t('Expire Time')}}</ion-label>
+          <ion-input
+            [(ngModel)]="coupon.expired_time"
+            type="datetime-local"
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{t('Only for VIP')}}?</ion-label>
+          <ion-toggle [(ngModel)]="coupon.is_vip_only"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>{{t('For all products')}}?</ion-label>
+          <ion-toggle [(ngModel)]="coupon.is_any_product"></ion-toggle>
+        </ion-item>
+
+        <ion-list *ngIf="!coupon.is_any_product">
+          <ion-item *ngFor="let product of data.products">
+            <ion-label>
+              {{product.product_name}} ({{product.type_name}})
+            </ion-label>
+            <ion-checkbox
+              [(ngModel)]="coupon.product_ids[product.id]"
+            ></ion-checkbox>
+          </ion-item>
+        </ion-list>
+        <ion-item>
+          <ion-label>{{t('For all service')}}?</ion-label>
+          <ion-toggle [(ngModel)]="coupon.is_any_service"></ion-toggle>
+        </ion-item>
+        <ion-list *ngIf="!coupon.is_any_service">
+          <ion-item *ngFor="let service of data.services">
+            <ion-label>
+              {{service.service_name}} ({{service.type_name}})
+            </ion-label>
+            <ion-checkbox
+              [(ngModel)]="coupon.service_ids[service.id]"
+            ></ion-checkbox>
+          </ion-item>
+        </ion-list>
+
+        <ion-buttons
+          style="display: flex; justify-content: center; margin: 1rem 0"
+        >
+          <ion-button (click)="saveCoupon(coupon)" fill="outline">
+            {{coupon.id > 0 ? 'update' : 'add coupon' }}
+          </ion-button>
+        </ion-buttons>
+      </ion-card>
+    </ion-list>
+  </ng-container>
+</ion-content>

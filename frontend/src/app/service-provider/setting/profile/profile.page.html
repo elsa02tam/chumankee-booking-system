@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button
+        defaultHref="/service-provider/setting"
+      ></ion-back-button>
+      <ion-title> {{t('Profile')}} </ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!user"> {{t('Loading profile')}}... </ion-content>
+<ion-content *ngIf="user">
+  <img
+    class="avatar"
+    [src]="pic"
+    onerror="this.src='https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg'"
+  />
+  <div class="profileText">{{user.profile.id}}: {{user.profile.username}}</div>
+  <div class="profileText">{{t('Email')}}: {{user.profile.email}}</div>
+  <div class="profileText">{{t('Phone')}}: {{user.profile.phone}}</div>
+
+  <ion-card class="cardContainer">
+    <div class="cardHeader">{{t('Service')}}</div>
+    <div class="text" *ngFor="let service of user.services; let i = index">
+      #{{i+1}} {{service.service_name}} ({{t('Available Quota')}}:
+      {{service.booking_max}})
+    </div>
+
+    <div class="text" *ngFor="let restTime of user.shopSetting">
+      <span class="textForColorBlue">{{t('Rest')}}: </span>
+      {{restTime.rest_remark}}
+    </div>
+  </ion-card>
+
+  <ion-card class="cardContainer">
+    <div class="cardHeader">{{t('Working Time')}}</div>
+    <ng-container class="weekContainer" *ngFor="let time of user.serviceTimes">
+      <ion-item-divider style="background-color: rgb(222, 223, 224)">
+        {{weekdayLabels[time.week_day]}}
+      </ion-item-divider>
+      <ion-item>
+        <ion-label position="stacked">{{t('From')}}</ion-label>
+        <ion-input
+          type="time"
+          [(ngModel)]="time.from_time"
+          presentation="HH:mm"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">{{t('To')}}</ion-label>
+        <ion-input
+          type="time"
+          [(ngModel)]="time.to_time"
+          presentation="HH:mm"
+        ></ion-input>
+      </ion-item>
+    </ng-container>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,7 @@
+{
+  "name": "chu man kee booking",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

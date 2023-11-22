@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Event Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading Events')}}...</ion-content>
+<ion-content *ngIf="data">
+  <ion-buttons style="display: flex; justify-content: center; margin-top: 1rem">
+    <ion-button
+      fill="outline"
+      color="tertiary"
+      size="small"
+      (click)="addNewEvent()"
+      >{{t('Add Event')}}</ion-button
+    >
+  </ion-buttons>
+
+  <ion-list *ngFor="let event of data.events">
+    <ion-card class="cardContainer">
+      <ion-item
+        ><ion-label position="stacked">{{t('Name')}}</ion-label>
+        <ion-input
+          [(ngModel)]="event.name"
+          type="text"
+          [placeholder]="t('Enter text')"
+        ></ion-input>
+      </ion-item>
+      <ion-item
+        ><ion-label position="stacked">{{t('Date')}} (yyyy-mm-dd)</ion-label>
+        <ion-input
+          [(ngModel)]="event.remark"
+          type="text"
+          [placeholder]="t('Enter text')"
+        ></ion-input>
+      </ion-item>
+      <ion-item
+        ><ion-label position="stacked">{{t('Quota')}}</ion-label>
+        <ion-input
+          [(ngModel)]="event.quota"
+          [placeholder]="t('Enter number')"
+          type="number"
+          min="0"
+          step="1"
+        ></ion-input
+      ></ion-item>
+      <ion-buttons class="btnContainer">
+        <ion-button fill="outline" size="small" (click)="saveEvent(event)">
+          {{event.id > 0 ? 'update' : 'add new plan' }}
+        </ion-button>
+      </ion-buttons>
+    </ion-card>
+  </ion-list>
+</ion-content>

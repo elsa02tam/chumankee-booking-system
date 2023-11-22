@@ -1,0 +1,165 @@
+<ion-content>
+  <span>
+    <h4 class="ion-text-center">{{t('Manage User')}}</h4>
+    <ion-note id="note">{{t('Admin')}}</ion-note>
+  </span>
+
+  <ion-searchbar
+    class="searchBar"
+    [placeholder]="t('Search Username')"
+    type="text"
+    [(ngModel)]="username"
+    (ngModelChange)="searchUser()"
+  ></ion-searchbar>
+
+  <div
+    style="background-color: #ffd675; height: 2rem"
+    *ngIf="!openCreateUserForm"
+    (click)="openCreateUserForm = true"
+    class="ion-text-center"
+  >
+    {{t('CREATE NEW USER')}}
+    <ion-icon name="chevron-down-outline"></ion-icon>
+  </div>
+  <div *ngIf="openCreateUserForm">
+    <div
+      style="background-color: #ffd675; height: 2rem"
+      (click)="openCreateUserForm = false"
+      class="ion-text-center"
+    >
+      {{t('CREATE NEW USER')}}
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </div>
+    <ion-card>
+      <ion-card-header class="ion-text-center">
+        {{t('New User')}}
+      </ion-card-header>
+      <ion-item
+        ><ion-label position="stacked">{{t('Username')}}</ion-label>
+        <ion-input
+          type="text"
+          [placeholder]="t('Enter Your Username')"
+          [(ngModel)]="createUsername"
+        ></ion-input>
+      </ion-item>
+
+      <ion-note class="restrictions">
+        The username must be at least 5 characters and no more than 20
+        characters long, contain at least one uppercase characters, at least one
+        lowercase characters and at least one number.
+      </ion-note>
+
+      <ion-item
+        ><ion-label position="stacked">{{t('Phone')}}</ion-label>
+        <ion-input
+          type="phone"
+          [placeholder]="t('Enter Your Phone')"
+          [(ngModel)]="phone"
+        ></ion-input>
+      </ion-item>
+      <ion-item
+        ><ion-label position="stacked">{{t('Email')}}</ion-label>
+        <ion-input
+          type="email"
+          [placeholder]="t('Enter Your Email')"
+          [(ngModel)]="email"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item
+        ><ion-label position="stacked">{{t('Password')}}</ion-label>
+        <ion-input
+          [type]="watchPassword ? 'text' : 'password'"
+          [placeholder]="t('Enter Your Password')"
+          [(ngModel)]="password"
+        ></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="watchPassword = !watchPassword">
+            <ion-icon
+              [name]="watchPassword ? 'eye' : 'eye-off-outline'"
+            ></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+
+      <ion-note class="restrictions">
+        The password must be at least 7 characters and no more than 16
+        characters long, contain at least one number.
+      </ion-note>
+
+      <ion-buttons class="createBtn">
+        <ion-button fill="outline" (click)="createUser()"
+          >{{t('CREATE USER')}}</ion-button
+        >
+      </ion-buttons>
+    </ion-card>
+  </div>
+
+  <ng-container *ngFor="let data of matchedUsers; let i =index">
+    <ion-card
+      class="cardContainer"
+      *ngIf="data.role !== Roles.super_admin && data.role !== Roles.admin"
+    >
+      <span button (click)="goToUserDetailsPage(data.id)">
+        <div class="cardHeader" [style.color]="data.color">
+          {{data.id}}: {{data.username}}
+        </div>
+        <div class="text">
+          <span class="textForColorBlue">{{t('Role')}}: </span>
+          <span *ngIf="data.is_vip === true"
+            ><ion-icon
+              name="diamond-sharp"
+              class="textForColorPurple"
+            ></ion-icon
+          ></span>
+          {{data.role + (data.is_vip?' (VIP)':'')}}
+        </div>
+      </span>
+      <div style="display: flex" class="text">
+        <span class="textForColorBlue">{{t('Color')}}: </span>
+        <ion-item>
+          <input
+            type="color"
+            [(ngModel)]="data.color"
+            (ngModelChange)="changeColor(data)"
+          />
+        </ion-item>
+      </div>
+
+      <ion-list>
+        <ion-item lines="none">
+          <ion-select
+            slot="end"
+            mode="ios"
+            interface="action-sheet"
+            [placeholder]="t('Change Role')"
+            (ionChange)="changeRole(data)"
+            [(ngModel)]="data.role"
+          >
+            <!-- (ionChange)="changeRole(data, $event.value)"
+          > -->
+            <ion-select-option [value]="Roles.service_provider">
+              {{Roles.service_provider}}
+            </ion-select-option>
+            <ion-select-option [value]="Roles.admin">
+              {{Roles.admin}}
+            </ion-select-option>
+            <ion-select-option [value]="Roles.consumer">
+              {{Roles.consumer}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item *ngIf="data.role === Roles.consumer" lines="none">
+          <ion-toggle
+            slot="end"
+            (ionChange)="changeRole(data)"
+            [(ngModel)]="data.is_vip"
+            color="secondary"
+          >
+            {{t('Set VIP')}}
+          </ion-toggle>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+  </ng-container>
+</ion-content>

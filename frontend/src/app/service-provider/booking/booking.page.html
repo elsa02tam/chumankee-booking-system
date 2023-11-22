@@ -1,0 +1,54 @@
+<ion-content *ngIf="!data">{{t('Loading booking')}}...</ion-content>
+<ion-content *ngIf="data">
+  <h4 class="ion-text-center">{{t('Manage Booking')}}</h4>
+
+  <ion-searchbar
+    style="margin-bottom: 0.5rem"
+    class="searchBar"
+    [placeholder]="t('Search Service Name')"
+    type="text"
+    [(ngModel)]="serviceName"
+    (ngModelChange)="searchBar()"
+  ></ion-searchbar>
+  <ion-searchbar
+    class="searchBar"
+    [placeholder]="t('Search Consumer Name')"
+    type="text"
+    [(ngModel)]="ConsumerName"
+    (ngModelChange)="searchBar()"
+  ></ion-searchbar>
+
+  <ng-container *ngFor="let booking of matchedResult; let i = index">
+    <ion-card class="cardContainer">
+      <div class="cardHeader">{{booking.service.name}}</div>
+      <div class="text">
+        {{t('Booked by')}} ({{booking.user.id}}) {{booking.user.username}}
+      </div>
+
+      <div class="text">
+        <span class="textForColorBlue"> {{t('Booked Time')}}: </span>
+        {{booking.from_time | date:'yyyy-MM-dd HH:mm':'GMT+8'}}
+      </div>
+      <div class="text">
+        <span class="textForColorBlue"> {{t('Status')}}: </span>
+        <span *ngIf="booking.booking_submit_time">{{t('Processing')}}</span>
+      </div>
+
+      <div class="text">
+        <span class="textForColorBlue">{{t('Admin Action')}}: </span>
+        <span
+          *ngIf="!booking.booking_cancel_time && !booking.booking_reject_time && !booking.booking_accept_time"
+          >{{t('N/A')}}</span
+        >
+        <span
+          class="textForColorRed"
+          *ngIf="booking.booking_cancel_time || booking.booking_reject_time"
+          ><ion-icon name="warning-outline"></ion-icon>{{t('Cancelled')}}</span
+        >
+        <span *ngIf="booking.booking_accept_time" class="textForColorGreen"
+          >{{t('Accepted by Admin')}}</span
+        >
+      </div>
+    </ion-card>
+  </ng-container>
+</ion-content>

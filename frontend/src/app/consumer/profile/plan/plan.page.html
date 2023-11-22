@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/consumer/profile"></ion-back-button>
+      <ion-title>{{t('Package')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading user packages')}}...</ion-content>
+
+<ion-content *ngIf="data">
+  <ng-container *ngFor="let plan of data.plans; let i =index">
+    <ion-card class="cardContainer">
+      <div class="cardHeader">
+        {{plan.plan_id}}: {{plan.service_name}}
+        <span *ngIf="plan.service_type_name">({{plan.service_type_name}})</span>
+      </div>
+      <div class="text">{{plan.title}}</div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Total Quota')}}: </span>
+        {{plan.quota}}
+      </div>
+
+      <div class="text">
+        <span class="textForColorBlue">{{t('Max. weekly quota')}}: </span>
+        {{plan.weekly_quota}}
+      </div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Used total quota')}}: </span>
+        {{plan.used_quota}}
+      </div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Used weekly quota')}}: </span
+        >{{plan.used_weekly_quota}}
+      </div>
+      <div class="text" style="color: #fa3c82">
+        {{t('Expiry Time')}}: {{plan.user_plan_expire_time |date:dateFormat}}
+      </div>
+    </ion-card>
+  </ng-container>
+</ion-content>

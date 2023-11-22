@@ -1,0 +1,263 @@
+<ion-content>
+  <h4 class="ion-text-center">{{t('Order Management')}}</h4>
+
+  <ion-segment mode="md" [(ngModel)]="filter" (ngModelChange)="applyFilter()">
+    <ion-segment-button value="pending">{{t('Pending')}}</ion-segment-button>
+    <ion-segment-button value="to-pay">{{t('Need to Pay')}}</ion-segment-button>
+    <ion-segment-button value="paid">{{t('Paid')}}</ion-segment-button>
+  </ion-segment>
+
+  <ion-list>
+    <ion-card *ngFor="let item of items" class="cardContainer">
+      <ng-container *ngIf="item.order as order">
+        <div class="cardHeader">
+          {{t('Order ID')}}: {{order.t_shopping_order_id}}
+        </div>
+        <div class="text">
+          <span class="textForColorBlue"
+            >({{order.user_id}}) {{t('User')}}:
+          </span>
+          {{order.username}}
+          <span *ngIf="order.is_vip == true"
+            ><ion-icon
+              name="diamond-sharp"
+              class="textForColorPurple"
+            ></ion-icon
+          ></span>
+        </div>
+        <div class="text">
+          <span class="textForColorBlue">{{t('Checkout on')}}</span>
+          {{order.checkout_time|date:dateFormat}}
+        </div>
+        <div class="text">
+          <span class="textForColorBlue">{{t('Payment Status')}}: </span>
+          <span
+            class="textForColorRed"
+            *ngIf="!item.order.deposit_time && !item.order.full_pay_time"
+          >
+            <ion-icon name="alert-circle-sharp"></ion-icon>
+            {{t('Didn\'t pay')}}</span
+          >
+
+          <span
+            style="color: #e0b85a"
+            *ngIf="item.order.deposit_time && !item.order.full_pay_time"
+          >
+            <ion-icon name="alert-circle-sharp"></ion-icon>
+            {{t('Paid Deposit Only')}}</span
+          >
+          <span class="textForColorGreen" *ngIf="item.order.full_pay_time">
+            <ion-icon name="checkmark-circle-sharp"></ion-icon>
+            {{t('Paid Fully')}}</span
+          >
+          <ion-button
+            fill="outline"
+            color="secondary"
+            size="small"
+            (click)="receivePayme(item,'deposit',item.order.deposit_amount)"
+            *ngIf="
+
+          item.order.deposit_amount &&
+          (!item.order.deposit_time )"
+          >
+            {{t('Receive Deposit')}} (${{item.order.deposit_amount}}
+            {{t('Payme')}})
+          </ion-button>
+          <ion-button
+            fill="outline"
+            color="secondary"
+            size="small"
+            (click)="receivePayme(item,'full-pay',item.order.full_pay_amount)"
+            *ngIf="
+
+        item.order.full_pay_amount &&
+        (!item.order.full_pay_time)"
+          >
+            {{t('Receive Full Pay')}} (${{item.order.full_pay_amount}}
+            {{t('Payme')}})
+          </ion-button>
+          <img
+            src="/assets/payme_qrcode.png"
+            alt="Payme QR Code"
+            style="width: 12rem; height: 12rem; object-fit: cover"
+          />
+        </div>
+
+        <div
+          style="
+            background-color: aliceblue;
+            display: flex;
+            justify-content: space-around;
+          "
+          *ngIf="showPaymentForm != item &&!item.order.deposit_amount &&!item.order.full_pay_amount"
+          (click)="showPaymentForm = item"
+        >
+          <span class="text">{{t('Fill-in Payment Request')}}</span>
+          <ion-icon
+            class="chevronDownIcon"
+            name="chevron-down-outline"
+          ></ion-icon>
+        </div>
+
+        <div
+          *ngIf="showPaymentForm == item"
+          style="
+            background-color: aliceblue;
+            display: flex;
+            justify-content: space-around;
+          "
+          (click)="showPaymentForm = undefined"
+        >
+          <span class="text">{{t('Fill-in Payment Request')}}</span>
+          <span>
+            <ion-icon
+              class="chevronUpIcon"
+              name="chevron-up-outline"
+            ></ion-icon>
+          </span>
+        </div>
+
+        <div *ngIf="showPaymentForm == item">
+          <ion-item>
+            <ion-label position="stacked"
+              >(1) {{t('Pay Deposit Amount')}}</ion-label
+            >
+            <ion-input
+              type="number"
+              min="0"
+              step="1"
+              [(ngModel)]="deposit_amount"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked"
+              >(1) {{t('Pay Deposit Deadline')}}</ion-label
+            >
+            <ion-input
+              [(ngModel)]="deposit_deadline"
+              type="datetime-local"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked"
+              >(2) {{t('Pay Fully Amount')}}</ion-label
+            >
+            <ion-input
+              type="number"
+              min="0"
+              step="1"
+              [(ngModel)]="full_pay_amount"
+            ></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked"
+              >(2) {{t('Pay Fully Deadline')}}</ion-label
+            >
+            <ion-input
+              [(ngModel)]="full_pay_deadline"
+              type="datetime-local"
+            ></ion-input>
+          </ion-item>
+          <ion-buttons class="updateBtn">
+            <ion-button
+              class="text"
+              fill="outline"
+              size="small"
+              color="success"
+              (click)="submitPaymentRequest(item)"
+            >
+              {{t('Submit Payment Request')}}
+            </ion-button>
+          </ion-buttons>
+          <div style="background-color: aliceblue; min-height: 2rem"></div>
+        </div>
+
+        <div class="text">
+          <span class="textForColorBlue">{{t('Full Paid Time')}}: </span>
+          {{order.full_pay_time|date:dateFormat}}
+        </div>
+        <div class="text">
+          <span class="textForColorBlue">{{t('Full Paid Amount')}}: </span
+          >{{order.full_pay_amount}}
+        </div>
+        <div class="text">
+          <span class="textForColorBlue">{{t('Full Paid Deadline')}}: </span
+          >{{order.full_pay_deadline |date:dateFormat}}
+        </div>
+        <div
+          *ngIf="!order.deposit_amount"
+          style="color: red"
+          class="ion-text-center"
+        >
+          *{{t('Waiting admin to set deposit amount')}}*
+        </div>
+        <div *ngIf="order.deposit_amount">
+          <div *ngIf="order.deposit_time" class="text">
+            <span class="textForColorBlue">{{t('Deposit Paid Time')}}: </span>
+            {{order.deposit_time|date:dateFormat}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Deposit Amount')}}: </span
+            >{{order.deposit_amount}}
+          </div>
+
+          <div *ngIf="!order.deposit_time" class="text">
+            <span class="textForColorBlue">{{t('Deposit Deadline')}}: </span>
+            {{order.deposit_deadline |date:dateFormat}}
+          </div>
+        </div>
+        <ng-container *ngIf="order.coupon_code">
+          <div class="text">
+            <span class="textForColorBlue">{{t('Coupon')}}: </span
+            >{{order.coupon_code}} (${{order.discount_amount}})
+          </div>
+          <div class="text">
+            {{t('Expired on')}} {{order.expired_time|date:dateFormat}}
+          </div>
+        </ng-container>
+
+        <div class="text">
+          <span class="textForColorBlue">{{t('Order')}}: </span>
+        </div>
+        <div *ngFor="let orderPart of item.parts" class="text">
+          <div>
+            {{orderPart.product_id}}: {{orderPart.name}} (${{orderPart.price}})
+          </div>
+        </div>
+
+        <div class="text">
+          <span class="textForColorBlue">{{t('Payment')}}: </span>
+        </div>
+        <ng-container *ngFor="let payment of item.payments">
+          <div class="text">payment #{{payment.id}}</div>
+          <div *ngIf="payment.filename" class="text">
+            {{t('Receipt')}}:
+            <img [src]="toImageSrc(payment.filename)" />
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Submit Time')}}: </span>
+            {{payment.submit_time|date:dateFormat}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Remark')}}: </span>
+            {{payment.remark}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue"
+              >{{t('Paid')}} ${{payment.amount}} {{t('by')}} </span
+            >{{payment.method}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Accepted on')}}</span>
+            {{payment.accept_time|date:dateFormat}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Rejected on')}}</span>
+            {{payment.reject_time|date:dateFormat}}
+          </div>
+        </ng-container>
+      </ng-container>
+    </ion-card>
+  </ion-list>
+</ion-content>

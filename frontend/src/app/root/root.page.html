@@ -1,0 +1,63 @@
+<ion-content>
+  <h4 class="ion-text-center">Manage User</h4>
+  <ion-note id="note">Super Admin</ion-note>
+  <div class="logoutBtn">
+    <ion-buttons class="btnContainer">
+      <ion-button fill="outline" (click)="logoutAccount()">
+        Logout
+        <ion-icon slot="end" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </div>
+
+  <ion-searchbar
+    style="margin-bottom: 0.5rem"
+    class="searchBar"
+    [placeholder]="t('Search Username')"
+    type="text"
+    [(ngModel)]="username"
+    (ngModelChange)="searchBar()"
+  ></ion-searchbar>
+  <ion-searchbar
+    style="margin-bottom: 0.5rem"
+    class="searchBar"
+    [placeholder]="t('Search Email')"
+    type="text"
+    [(ngModel)]="email"
+    (ngModelChange)="searchBar()"
+  ></ion-searchbar>
+
+  <ion-list class="userList">
+    <ng-container *ngFor="let data of matchedUsers; let i =index">
+      <ion-card *ngIf="data.role != 'super_admin'">
+        <span>
+          <ion-card-title class="cardHeader"
+            >{{data.id}}: {{data.username}}
+          </ion-card-title>
+          <ion-card-content>
+            <div>Email: {{data.email}}</div>
+            <div>Role: {{data.role}}</div>
+          </ion-card-content>
+        </span>
+        <ion-buttons class="button">
+          <ion-button
+            fill="outline"
+            *ngIf="data.role != 'admin'"
+            (click)="changeRole(data, 'admin')"
+          >
+            Change to Admin
+            <ion-icon slot="end" name="bookmarks-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="outline"
+            *ngIf="data.role == 'admin'"
+            (click)="changeRole(data, 'consumer')"
+          >
+            Change to Consumer
+            <ion-icon slot="end" name="bookmarks"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-card>
+    </ng-container>
+  </ion-list>
+</ion-content>

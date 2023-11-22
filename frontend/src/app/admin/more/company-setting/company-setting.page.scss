@@ -1,0 +1,31 @@
+.card {
+  margin: 1em 1em 2em 1em;
+  border: none;
+}
+
+.cardTitle {
+  margin: 0.4em 0 0 1.5em;
+}
+
+.weekContainer {
+  margin: 0;
+  margin-bottom: 1rem;
+}
+.week {
+  min-width: 3rem;
+  margin-right: 0;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+}
+
+.updateBtnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.updateBtn {
+  margin: 0.5em;
+}

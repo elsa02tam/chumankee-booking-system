@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/guest/welcome"></ion-back-button>
+    </ion-buttons>
+    <ion-title> {{t('Product')}} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">Loading...</ion-content>
+<ion-content *ngIf="data">
+  <ion-searchbar
+    class="searchBar"
+    [placeholder]="t('Search Product Name')"
+    type="text"
+    [(ngModel)]="productName"
+    (ngModelChange)="searchBar()"
+  >
+  </ion-searchbar>
+
+  <div
+    style="
+      color: red;
+      word-wrap: break-word;
+      text-align: center;
+      margin: 0.5rem 2.5rem;
+    "
+  >
+    ***Please login or register before accessing to additional features such as
+    booking or advanced functionalities***
+  </div>
+  <div
+    style="
+      color: red;
+      word-wrap: break-word;
+      text-align: center;
+      margin: 0.5rem 2.5rem;
+    "
+  >
+    ***請先登錄或註冊以獲得更多功能的訪問權限***
+  </div>
+
+  <ng-container *ngFor="let product of matchedResult; let i =index">
+    <ion-card class="cardContainer">
+      <div class="cardHeader">
+        {{t('Product Type')}}: {{product.product_type.type}}
+      </div>
+      <div class="generalImg">
+        <img
+          [src]="toImageSrc(product.pic)"
+          style="width: 15rem; height: 10rem; object-fit: cover"
+        />
+      </div>
+
+      <div class="text">{{product.id}}: {{product.name}}</div>
+      <div class="text">
+        <span style="color: #184371">{{t('Description')}}: </span>
+        {{product.desc}}
+      </div>
+      <div class="text">
+        <span style="color: #184371">{{t('Price')}}: </span>
+        ${{product.price}}
+      </div>
+    </ion-card>
+  </ng-container>
+</ion-content>

@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/consumer/profile"></ion-back-button>
+      <ion-title>{{t('Shopping Cart')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading Shopping Cart')}}...</ion-content>
+<ion-content *ngIf="data">
+  <ion-radio-group
+    [hidden]="orderPart.length === 0"
+    [(ngModel)]="data.selectedCouponCode"
+    (ngModelChange)="savePromoCode(data.selectedCouponCode)"
+  >
+    <ng-container *ngFor="let coupon of data.availableCoupons;let i =index">
+      <ion-item>
+        <ion-label>
+          <p>{{t('Coupon Code')}}: {{coupon.coupon_code}}</p>
+          <p>{{t('Discount')}}: -${{coupon.discount_amount}}</p>
+          <p>{{t('Expiry Time')}}: {{coupon.expired_time |date:dateFormat}}</p>
+        </ion-label>
+        <ion-radio [value]="coupon.coupon_code" justify="end"></ion-radio>
+      </ion-item>
+    </ng-container>
+  </ion-radio-group>
+
+  <ion-card *ngIf=" orderPart.length === 0" class="cardContainer">
+    <ion-card-header color="warning" class="ion-text-center">
+      <ion-icon name="warning-outline"></ion-icon>
+      {{t('No items in the shopping cart')}}
+    </ion-card-header>
+  </ion-card>
+
+  <ng-container *ngFor="let cartData of data.orderParts;let i =index">
+    <ion-card class="cardContainer">
+      <div class="cardHeader">
+        {{cartData.product_id}}: {{cartData.product_name}}
+      </div>
+      <div class="text" style="display: flex; justify-content: space-between">
+        {{t('Price')}} ${{cartData.price}}
+        <ion-buttons
+          (click)="deleteOrder(cartData.product_id)"
+          class="textForColorRed"
+          style="margin: 1rem"
+        >
+          <ion-button fill="outline"
+            ><ion-icon name="trash-outline"></ion-icon
+          ></ion-button>
+        </ion-buttons>
+      </div>
+      <img
+        [src]="toImageSrc(cartData.pic)"
+        style="
+          width: 12rem;
+          height: 10rem;
+          object-fit: cover;
+          margin-left: 3rem;
+        "
+      />
+
+      <ion-list [hidden]="cartData.addonProducts.length === 0">
+        <div class="text">{{t('Add-on Product')}}</div>
+        <ng-container *ngFor="let addon of cartData.addonProducts">
+          <ion-item (click)="addonProductAddToShoppingCart(addon.id)">
+            <ion-label class="ion-text-wrap"> {{addon.name}} </ion-label>
+            <ion-button slot="end">{{t('Add')}}</ion-button>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+    </ion-card>
+  </ng-container>
+
+  <ion-buttons style="display: flex; justify-content: space-around">
+    <ion-button
+      (click)="routerModel('consumer/home')"
+      fill="outline"
+      color="secondary"
+      >{{t('Add More Booking')}}</ion-button
+    >
+    <ion-button routerLink="/consumer/product" fill="outline" color="secondary"
+      >{{t('Add More Product')}}</ion-button
+    >
+  </ion-buttons>
+
+  <ion-buttons style="display: flex; justify-content: center; margin: 1rem"
+    ><ion-button (click)="checkout()" fill="outline" color="medium"
+      ><ion-icon name="bag-check-outline"></ion-icon
+      >{{t('Check-out')}}</ion-button
+    ></ion-buttons
+  >
+</ion-content>

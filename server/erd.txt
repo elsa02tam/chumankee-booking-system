@@ -1,0 +1,315 @@
+# Visualize on https://erd.surge.sh
+# or https://quick-erd.surge.sh
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+
+t_user
+------
+id integer PK
+username text unique
+password_hash text
+email text unique
+role enum('super_admin','admin','service_provider','consumer')
+is_vip boolean
+pic text NULL
+phone text NULL
+delete_time integer NULL
+original_email text NULL
+color text NULL
+
+
+t_service_type
+--------------
+id integer PK
+name text unique
+
+
+t_service
+---------
+id integer PK
+type_id integer FK >- t_service_type.id
+name text
+quota integer
+pic text NULL
+duration integer
+price integer
+is_vip boolean NULL
+
+
+t_provider_working_hr
+---------------------
+id integer PK
+provider_id integer FK >- t_user.id
+week_day integer
+from_time time
+to_time time
+
+
+t_service_provider
+------------------
+id integer PK
+provider_id integer FK >- t_user.id
+service_id integer FK >- t_service.id
+booking_max integer
+
+
+t_shop_working_hr
+-----------------
+id integer PK
+week_day integer
+from_time time NULL
+to_time time NULL
+
+
+t_special_rest
+--------------
+id integer PK
+remark text
+from_time integer
+to_time integer
+
+
+t_service_booking
+-----------------
+id integer PK
+user_id integer FK >- t_user.id
+service_id integer FK >- t_service.id
+provider_id integer FK >- t_user.id
+promo_code_id integer NULL FK >- t_coupon.id
+from_time integer
+to_time integer
+booking_submit_time integer
+booking_accept_time integer NULL
+booking_reject_time integer NULL
+booking_cancel_time integer NULL
+paid_deposit_time integer NULL
+paid_fully_time integer NULL
+full_pay_amount integer NULL
+deposit_amount integer NULL
+full_pay_deadline integer NULL
+deposit_deadline integer NULL
+arrive_time integer NULL
+leave_time integer NULL
+refund_submit_time integer NULL
+refund_accept_time integer NULL
+refund_reject_time integer NULL
+refund_finish_time integer NULL
+user_plan_id integer NULL FK >- t_user_plan.id
+remark text NULL
+
+t_event
+-------
+id integer PK
+name text
+remark text
+quota integer NULL
+cancel_time integer NULL
+
+
+t_shop_setting
+--------------
+id integer PK
+ppl_max integer
+break_unit integer
+rest_remark text
+remind_booking_interval integer NULL
+allow_cancel_booking_time integer NULL
+
+t_coupon
+--------
+id integer PK
+coupon_code text
+discount_amount integer
+expired_time integer
+is_any_product boolean NULL
+is_any_service boolean NULL
+is_vip_only boolean NULL
+quota integer NULL
+
+
+t_coupon_service
+----------------
+id integer PK
+coupon_id integer FK >- t_coupon.id
+service_id integer FK >- t_service.id
+
+
+t_coupon_product
+----------------
+id integer PK
+coupon_id integer FK >- t_coupon.id
+product_id integer FK >- t_product.id
+
+
+t_plan
+------
+id integer PK
+service_id integer NULL FK >- t_service.id
+service_type_id integer NULL FK >- t_service_type.id
+weekly_quota integer NULL
+quota integer NULL
+expire_month integer NULL
+desc text
+title text
+price integer NULL
+cancel_time integer NULL
+
+
+t_user_plan
+-----------
+id integer PK
+user_id integer FK >- t_user.id
+plan_id integer FK >- t_plan.id
+expire_time integer
+payment_time integer NULL
+
+
+t_product_type
+--------------
+id integer PK
+type text unique
+
+
+t_product
+---------
+id integer PK
+type_id integer FK >- t_product_type.id
+name text
+desc text
+pic text
+price integer
+is_vip boolean NULL
+
+
+t_payment
+---------
+id integer PK
+remark text
+submit_time integer
+filename text NULL
+stripe_id text NULL
+accept_time integer NULL
+reject_time integer NULL
+method text NULL
+amount integer NULL
+order_id integer NULL FK >- t_shopping_order.id
+booking_id integer NULL FK >- t_service_booking.id
+
+
+t_shopping_order
+----------------
+id integer PK
+user_id integer FK >- t_user.id
+promo_code_id integer NULL FK >- t_coupon.id
+checkout_time integer NULL
+full_pay_time integer NULL
+full_pay_amount integer NULL
+full_pay_deadline integer NULL
+deposit_time integer NULL
+deposit_amount integer NULL
+deposit_deadline integer NULL
+
+
+t_order_part
+------------
+id integer PK
+product_id integer FK >- t_product.id
+order_id integer FK >- t_shopping_order.id
+
+
+t_addon_service
+---------------
+id integer PK
+from_service_id integer FK >- t_service.id
+to_service_id integer FK >- t_service.id
+
+
+t_remind_booking
+----------------
+id integer PK
+user_id integer FK >- t_user.id
+notice_time integer
+
+
+t_addon_booking
+---------------
+id integer PK
+service_id integer FK >- t_service.id
+booking_id integer FK >- t_service_booking.id
+
+t_addon_product
+---------------
+id integer PK
+from_product_id integer FK >- t_product.id
+to_product_id integer FK >- t_product.id
+
+t_addon_order
+-------------
+id integer PK
+product_id integer FK >- t_product.id
+shopping_order_id integer FK >- t_shopping_order.id
+
+
+t_email_template
+----------------
+id integer PK
+name_en text null
+name_zh text null
+content text null
+default_content text
+variables text
+
+t_notice
+--------
+id integer PK
+title text
+content text
+publish_time integer NULL
+
+
+# zoom: 0.694
+# view: (-735, -184)
+# text-bg: #6495ed
+# text-color: #000000
+# diagram-bg: #f5f5f5
+# diagram-text: #f5f5f5
+# table-bg: #ffffff
+# table-text: #000000
+# t_user (542, 139)
+# t_service_type (43, 482)
+# t_service (7, 266)
+# t_provider_working_hr (1131, 3)
+# t_service_provider (321, 635)
+# t_shop_working_hr (1, 2)
+# t_special_rest (189, 2)
+# t_service_booking (562, 472)
+# t_event (353, 2)
+# t_shop_setting (558, 2)
+# t_coupon (843, 382)
+# t_coupon_service (305, 288)
+# t_coupon_product (1158, 609)
+# t_plan (1, 603)
+# t_user_plan (246, 143)
+# t_product_type (1417, 524)
+# t_product (1151, 402)
+# t_payment (865, 608)
+# t_shopping_order (1151, 164)
+# t_order_part (1406, 407)
+# t_addon_service (4, 140)
+# t_remind_booking (906, 1)
+# t_addon_booking (297, 482)
+# t_addon_product (1142, 716)
+# t_addon_order (1426, 276)
+# t_email_template (283, 776)

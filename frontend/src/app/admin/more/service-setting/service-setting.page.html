@@ -1,0 +1,141 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Service Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading service information')}}...</ion-content>
+<ion-content *ngIf="data">
+  <ion-card class="cardContainer">
+    <div class="cardHeader">{{t('Service Type List')}}</div>
+    <ion-list>
+      <ion-item *ngFor="let serviceType of data.serviceTypes">
+        <ion-label position="floating"
+          >{{t('Service Type')}} {{serviceType.id > 0 ? '#'+serviceType.id :
+          '(new)'}}</ion-label
+        >
+        <ion-input [(ngModel)]="serviceType.name"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="saveServiceType(serviceType)">
+            <ion-icon
+              slot="icon-only"
+              name="checkmark-circle-outline"
+            ></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+      <ion-buttons
+        style="display: flex; justify-content: center; margin-top: 0.5rem"
+      >
+        <ion-button
+          (click)="addNewServiceType()"
+          fill="outline"
+          color="tertiary"
+        >
+          {{t('Add More Service Type')}}
+        </ion-button>
+      </ion-buttons>
+    </ion-list>
+  </ion-card>
+
+  <div
+    style="
+      display: flex;
+      justify-content: center;
+      background-color: rgb(222, 223, 224);
+    "
+  >
+    {{t('Below is the Service List')}}
+  </div>
+
+  <ion-item>
+    <ion-label position="stacked">{{t('Service Type')}}</ion-label>
+    <ion-select
+      [(ngModel)]="serviceTypeIdFilter"
+      (ngModelChange)="applyFilter()"
+    >
+      <ion-select-option [value]="0"> {{t('All Types')}}</ion-select-option>
+      <ion-select-option
+        *ngFor="let row of data?.serviceTypes"
+        [value]="row.id"
+      >
+        {{row.name}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-buttons
+    style="display: flex; justify-content: center; margin-top: 0.5rem"
+  >
+    <ion-button (click)="addNewService()" fill="outline" color="tertiary"
+      >{{t('Add More Service')}}</ion-button
+    >
+  </ion-buttons>
+
+  <ion-list>
+    <ion-card *ngFor="let service of matchedServices" class="cardContainer">
+      <ion-item>
+        <ion-label position="stacked">{{t('Service Type')}}</ion-label>
+        <ion-select [(ngModel)]="service.type_id">
+          <ion-select-option
+            *ngFor="let row of data?.serviceTypes"
+            [value]="row.id"
+          >
+            {{row.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{t('Name')}}</ion-label>
+        <ion-input [(ngModel)]="service.name" type="text"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{t('Price')}}</ion-label>
+        <ion-input
+          [(ngModel)]="service.price"
+          type="number"
+          min="0"
+          step="1"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">{{t('Max Booking Quota')}}</ion-label>
+        <ion-input
+          [(ngModel)]="service.quota"
+          type="number"
+          min="0"
+          step="1"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked"
+          >{{t('Service Duration (minutes)')}}</ion-label
+        >
+        <ion-input [(ngModel)]="service.duration" min="0" step="30"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{t('Service Picture')}}</ion-label>
+        <ion-button slot="end" (click)="selectServicePic(service)">
+          <ion-icon name="cloud-upload"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{t('Only for VIP')}}?</ion-label>
+        <ion-toggle [(ngModel)]="service.is_vip" color="secondary"></ion-toggle>
+      </ion-item>
+      <div style="margin-bottom: 1rem">
+        <img [src]="picUrls[service.id]" />
+      </div>
+      <ion-buttons
+        style="display: flex; justify-content: center; margin-bottom: 1rem"
+      >
+        <ion-button (click)="saveService(service)" fill="outline">
+          {{service.id >0? 'update service' : 'add new service' }}
+        </ion-button>
+      </ion-buttons>
+    </ion-card>
+  </ion-list>
+</ion-content>

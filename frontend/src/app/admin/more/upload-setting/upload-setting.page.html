@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Upload Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <img src="assets/csv.png" style="margin: 1rem 0" />
+
+  <ion-button (click)="uploadFile()">
+    <ion-icon name="document-outline"></ion-icon>
+  </ion-button>
+  <a href="assets/exampleCSV.csv" download="exampleCSV.csv">
+    <ion-button> {{t('Download Example CSV File')}}</ion-button>
+  </a>
+</ion-content>

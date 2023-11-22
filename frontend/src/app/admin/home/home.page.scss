@@ -1,0 +1,29 @@
+.logoutBtn {
+  display: flex;
+  justify-content: end;
+  margin-right: 2em;
+}
+
+.cardHeader {
+  margin: 0.5em 1em 0.3em 1em;
+  color: black;
+}
+
+#note {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem;
+}
+
+.createBtn {
+  display: flex;
+  margin: 1em;
+  justify-content: center;
+}
+
+.restrictions {
+  display: flex;
+  margin-left: 2em;
+  margin-right: 2em;
+  font-size: 0.7rem;
+}

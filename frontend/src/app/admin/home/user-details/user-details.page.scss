@@ -1,0 +1,54 @@
+.imgBtnContainer {
+  display: flex;
+  justify-content: end;
+}
+
+.imgBtn {
+  margin-right: 1em;
+}
+
+.addBtn {
+  margin: 0;
+}
+
+.editBtn {
+  margin-block: inherit;
+  margin-left: 7rem;
+}
+
+.weekContainer {
+  margin: 0;
+}
+.week {
+  min-width: 3rem;
+  margin-right: 0;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+}
+
+.updateBtnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.updateBtn {
+  margin: 0.5em;
+}
+
+.addBtnContainer {
+  display: flex;
+  justify-content: end;
+}
+
+.addBtn {
+  margin-right: 1.5em;
+}
+
+.submitBtn {
+  display: flex;
+  margin: 1em;
+  justify-content: center;
+}

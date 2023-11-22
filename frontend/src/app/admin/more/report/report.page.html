@@ -1,0 +1,157 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Report')}}</ion-title>
+    </ion-buttons>
+    <ion-segment [(ngModel)]="reportPage">
+      <ion-segment-button value="charts" (click)="renderReport()">
+        <ion-label>{{t('Charts')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button
+        value="dailyBooking"
+        (click)="loadBookingListByAdmin()"
+      >
+        <ion-label>{{t('Daily Booking')}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button
+        hidden
+        value="comingWeekBooking"
+        (click)="loadNextWeekBookingListByAdmin()"
+      >
+        <ion-label>{{t('Coming Week Booking')}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding" [ngSwitch]="reportPage">
+  <div *ngSwitchCase="'charts'">
+    <ion-card class="cardContainer ion-padding">
+      <ion-card-header> {{t('Report')}}</ion-card-header
+      ><canvas
+        baseChart
+        class="chart"
+        [data]="ChartData"
+        [options]="ChartOptions"
+        [plugins]="ChartPlugins"
+        [type]="ChartType"
+      >
+      </canvas
+    ></ion-card>
+
+    <ion-grid>
+      <ion-row>
+        <ion-segment>
+          <ion-segment-button (click)="setReportType('booking')">
+            <ion-label>{{t('Booking Number')}}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button (click)="showProviderList()">
+            <ion-label>{{t('Sales')}}</ion-label> </ion-segment-button
+          ><ion-segment-button (click)="setReportType('attendance')">
+            <ion-label>{{t('Attendance')}}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button (click)="setReportType('serviceHotness')">
+            <ion-label>{{t('Service Hotness')}}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-row>
+      <ion-row>
+        <ion-segment>
+          <ion-segment-button (click)="setTimeScale('year')">
+            <ion-label>{{t('All Time Chart')}}</ion-label>
+          </ion-segment-button>
+          <ion-segment-button (click)="showYearPicker()">
+            <ion-label>{{t('Year Chart')}}</ion-label> </ion-segment-button
+          ><ion-segment-button (click)="showDatePicker()">
+            <ion-label>{{t('Week Chart')}}</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-row>
+      <ion-modal>
+        <ng-template>
+          <ion-datetime
+            *ngIf="timeScale ==='month' && selectProvider === false"
+            id="year"
+            presentation="year"
+            [(ngModel)]="inputYearString"
+            (ionChange)="dismissModal()"
+          ></ion-datetime>
+          <ion-datetime
+            *ngIf="timeScale ==='day' && selectProvider === false"
+            id="date"
+            presentation="date"
+            [(ngModel)]="inputDateString"
+            [isDateEnabled]="isWeekBegin"
+            (ionChange)="dismissModal()"
+          ></ion-datetime>
+          <ion-list *ngIf="selectProvider === true">
+            <ion-item (click)="setProviderId(-1)">
+              <ion-label>
+                <h1>{{t('All Provider')}}</h1>
+              </ion-label>
+            </ion-item>
+            <ng-container *ngFor="let provider of providerList">
+              <ion-item (click)="setProviderId(provider.id)">
+                <ion-label>
+                  <h1>{{provider.username}}</h1>
+                </ion-label>
+              </ion-item>
+            </ng-container>
+          </ion-list>
+        </ng-template>
+      </ion-modal>
+    </ion-grid>
+  </div>
+  <div *ngSwitchCase="'dailyBooking'">
+    <ion-datetime-button datetime="date"></ion-datetime-button>
+
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime
+          id="date"
+          presentation="date"
+          [(ngModel)]="inputDateString"
+          (ionChange)="loadBookingListByAdmin()"
+        ></ion-datetime>
+      </ng-template>
+    </ion-modal>
+    <ion-list
+      ><ion-item>
+        <div class="col">{{t('Username')}}</div>
+        <div class="col">{{t('Service Name')}}</div>
+        <div class="col">{{t('Provider Name')}}</div>
+        <div class="col">{{t('Used Promo Code')}}?</div>
+        <div class="col">{{t('Plan Title')}}</div>
+      </ion-item>
+      <div *ngFor="let booking of bookings">
+        <ion-item>
+          <div class="col">{{booking.username}}</div>
+          <div class="col">{{booking.name}}</div>
+          <div class="col">{{booking.provider_name}}</div>
+          <div class="col">{{booking.promo_code_id?t("Yes"):t("No")}}</div>
+          <div class="col">{{booking.title}}</div>
+        </ion-item>
+      </div>
+    </ion-list>
+  </div>
+  <div *ngSwitchCase="'comingWeekBooking'">
+    <ion-list
+      ><ion-item>
+        <div class="col">{{t('Username')}}</div>
+        <div class="col">{{t('Service Name')}}</div>
+        <div class="col">{{t('Provider Name')}}</div>
+        <div class="col">{{t('Used Promo Code')}}?</div>
+        <div class="col">{{t('Plan Title')}}</div>
+      </ion-item>
+      <div *ngFor="let booking of bookings">
+        <ion-item>
+          <div class="col">{{booking.username}}</div>
+          <div class="col">{{booking.name}}</div>
+          <div class="col">{{booking.provider_name}}</div>
+          <div class="col">{{booking.promo_code_id?"Yes":"No"}}</div>
+          <div class="col">{{booking.title}}</div>
+        </ion-item>
+      </div>
+    </ion-list>
+  </div>
+</ion-content>

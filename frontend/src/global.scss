@@ -1,0 +1,152 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import '~@ionic/angular/css/core.css';
+
+/* Basic CSS for apps built with Ionic */
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
+
+ion-icon {
+  font-size: 25px;
+}
+
+.searchBar {
+  padding: 0 2em;
+}
+
+.cardContainer {
+  margin: 0.5em 2.5em 1em 2.5em;
+}
+
+.cardHeader {
+  text-decoration: underline;
+  margin: 0.5rem 0 0.5rem 1.5rem;
+  font-size: 1.1rem;
+  word-wrap: break-word;
+  color: #184371;
+}
+
+.cardTitle {
+  margin: 0.4em 0.2em 0.2em 1.5em;
+}
+
+.text {
+  margin: 0 0 0.3rem 1.5rem;
+  padding: 0;
+}
+
+.warningText {
+  color: red;
+  margin: 0 0 0.3rem 1.5rem;
+  padding: 0;
+}
+
+.cardHeaderInCenter {
+  text-decoration: underline;
+  font-size: 1.2rem;
+  word-wrap: break-word;
+  color: #184371;
+  display: flex;
+  justify-content: center;
+}
+
+.textInCenter {
+  display: flex;
+  justify-content: center;
+}
+
+.generalImg {
+  width: 15rem;
+  margin: auto;
+  padding: 0.5rem;
+}
+
+.btn {
+  padding: 0;
+  margin: 0.2rem 0 0.5rem 1.6rem;
+}
+
+.textForColorBlue {
+  color: #184371;
+}
+
+.textForColorPurple {
+  color: #9d7efc;
+}
+
+.textForColorRed {
+  color: #fa3c82;
+}
+
+.textForColorGreen {
+  color: #2a9d8f;
+}
+
+.iconWithColorPurple {
+  cursor: pointer;
+  color: #9d7efc;
+}
+
+.profileAvatar {
+  display: block;
+  margin: 1em auto;
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+  object-fit: cover;
+}
+
+//for calendar setting
+.fc-direction-ltr {
+  width: 28rem;
+  height: 35rem;
+}
+.fc-liquid-hack td,
+.fc-liquid-hack th {
+  width: 4rem;
+}
+
+.cal-week-view .cal-day-headers {
+  padding-left: 40px;
+}
+
+.cal-week-view .cal-time-label-column {
+  width: 40px;
+}
+
+.cal-week-view {
+  font-size: 0.7rem;
+}
+
+.cal-week-view .cal-time {
+  text-align: unset;
+}
+
+//for warning
+//style="color: #fc6aa0"
+
+//for key value pair (key)
+// style="color: #184371"
+
+ion-toolbar {
+  --border-width: 0 0 0 !important;
+}

@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Email Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-accordion-group *ngIf="templates">
+    <ion-accordion *ngFor="let template of templates" [value]="template.id">
+      <ion-item slot="header" color="light">
+        <ion-label *ngIf="lang == 'en'">{{template.name_en}}</ion-label>
+        <ion-label *ngIf="lang == 'zh_hk'">{{template.name_zh}}</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <b *ngIf="template.variables.length > 0">{{t('Variables')}}</b>
+        <i *ngIf="template.variables.length === 0">{{t('No Variables')}}</i>
+        <ul>
+          <li *ngFor="let variable of template.variables">
+            <ion-text [color]="hasUsed(template,variable)?'success':'danger'">
+              {{'{'+variable+'}'}}
+            </ion-text>
+          </li>
+        </ul>
+        <ion-item>
+          <ion-textarea
+            label="content"
+            labelPlacement="floating"
+            [(ngModel)]="template.content"
+            autoGrow
+          ></ion-textarea>
+        </ion-item>
+        <ion-buttons style="margin: 1rem">
+          <ion-button
+            color="tertiary"
+            (click)="save(template)"
+            fill="outline"
+            style="margin-right: 5rem"
+          >
+            {{t('Save')}}
+          </ion-button>
+          <ion-button color="dark" (click)="reset(template)" fill="outline">
+            {{t('Reset')}}
+          </ion-button>
+        </ion-buttons>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <ion-list> </ion-list>
+</ion-content>

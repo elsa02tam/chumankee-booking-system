@@ -1,0 +1,178 @@
+<ion-content>
+  <h4 class="ion-text-center">{{t('Booking')}}</h4>
+  <ion-list>
+    <ion-segment mode="md" [(ngModel)]="filter" (ngModelChange)="applyFilter()">
+      <ion-segment-button value="all">{{t('All Service')}}</ion-segment-button>
+      <ion-segment-button value="available"
+        >{{t('Available')}}</ion-segment-button
+      >
+      <ion-segment-button value="fully booked"
+        >{{t('Fully Booked')}}</ion-segment-button
+      >
+    </ion-segment>
+
+    <ion-card *ngIf=" items.length === 0" class="cardContainer">
+      <ion-card-header color="warning" class="ion-text-center">
+        <ion-icon name="warning-outline"></ion-icon>
+
+        {{t('No Matched Services')}}
+      </ion-card-header>
+    </ion-card>
+    <ion-card class="cardContainer" *ngFor="let item of items">
+      <ng-container *ngIf="item.service as service">
+        <div class="cardHeader">{{service.name}}</div>
+        <div class="generalImg">
+          <img
+            [src]="service.pic"
+            style="width: 15rem; height: 10rem; object-fit: cover"
+          />
+        </div>
+        <div class="text">
+          <span style="color: #184371">{{t('Status')}}: </span>
+
+          {{item.status}} ({{service.booked}}/{{service.quota}})
+        </div>
+        <div class="text">
+          <span style="color: #184371">{{t('Duration')}}: </span>
+          {{service.duration}} {{t('minutes')}}
+        </div>
+
+        <div class="text">
+          <span style="color: #184371">{{t('Price')}}: </span>
+          ${{service.price}}
+        </div>
+        <div
+          class="text"
+          style="color: #fc6aa0"
+          *ngIf="service.providers.length === 0"
+        >
+          <ion-icon name="warning-outline"></ion-icon>
+          {{t('Service Provider')}}: {{t('N/A')}}
+        </div>
+        <div class="text" *ngIf="service.providers.length > 0">
+          <span style="color: #184371">
+            {{service.providers.length}} {{t('Service Provider')}}:
+          </span>
+
+          <div *ngFor="let provider of service.providers">
+            <ion-buttons>
+              <ion-button
+                size="small"
+                color="tertiary"
+                (click)="selectProvider(service, provider)"
+              >
+                <ion-icon name="flame-outline"></ion-icon>
+                <div>{{t('Book')}} {{provider.name}}</div>
+              </ion-button>
+            </ion-buttons>
+          </div>
+        </div>
+      </ng-container>
+    </ion-card>
+  </ion-list>
+  <ion-modal [isOpen]="!!selectedProvider" (didDismiss)="cancelBooking()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{t('Booking Service')}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cancelBooking()">
+              {{t('Dismiss')}}
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-list>
+          <ion-item>
+            <ion-label position="stacked">{{t('Selected Service')}}</ion-label>
+            <ion-input [value]="selectedService?.name" readonly></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{t('Selected Provider')}}</ion-label>
+            <ion-input [value]="selectedProvider?.name" readonly></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{t('Service Date')}}</ion-label>
+            <ion-input [(ngModel)]="selectedDate" type="date"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{t('Starting Time')}}</ion-label>
+            <ion-input [(ngModel)]="selectedStartTime" type="time"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{t('Finish Time')}}</ion-label>
+            <ion-input [(ngModel)]="selectedFinishTime" type="time"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{t('Promo Code')}}</ion-label>
+            <ion-input [(ngModel)]="promo_code" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">{{t('Add-on Service')}}</ion-label>
+            <ion-select [(ngModel)]="selectedAddonServicesID" multiple>
+              <ion-select-option
+                *ngFor="let addon of selectedService?.addon_services"
+                [value]="addon.id"
+              >
+                {{addon.name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item-divider>
+            {{t('Using Package')}}?
+
+            <ion-buttons slot="end">
+              <ion-button (click)="selectedPlan = undefined">
+                {{t('Cancel')}}
+              </ion-button>
+            </ion-buttons>
+          </ion-item-divider>
+          <div
+            *ngIf="selectedService?.user_plans?.length === 0"
+            style="color: red"
+          >
+            *{{t('No user plan available')}}*
+          </div>
+          <ion-radio-group [(ngModel)]="selectedPlan">
+            <ng-container *ngFor="let plan of selectedService?.user_plans">
+              <ion-item
+                *ngIf="
+(!plan.quota || plan.quota > plan.total_used)
+||
+(!plan.weekly_quota || plan.weekly_quota > plan.total_used)
+"
+              >
+                <ion-label class="ion-text-wrap">
+                  <b> {{plan.title}} </b>
+
+                  <ng-container *ngIf="plan.quota">
+                    <br />
+                    ({{t('Weekly Quota')}}:
+                    {{plan.weekly_used}}/{{plan.weekly_quota}})
+                  </ng-container>
+
+                  <ng-container *ngIf="plan.quota">
+                    <br />
+                    ({{t('Total Quota')}}: {{plan.total_used}}/{{plan.quota}})
+                  </ng-container>
+                </ion-label>
+                <ion-radio [value]="plan"> </ion-radio>
+              </ion-item>
+            </ng-container>
+          </ion-radio-group>
+        </ion-list>
+        <ion-buttons
+          style="display: flex; justify-content: center; margin-top: 0.5rem"
+        >
+          <ion-button
+            [disabled]="!canSubmitBooking()"
+            (click)="submitBooking()"
+            fill="outline"
+            >{{t('Submit')}}</ion-button
+          >
+        </ion-buttons>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

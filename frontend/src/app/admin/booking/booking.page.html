@@ -1,0 +1,108 @@
+<ion-content *ngIf="!data">{{t('Loading booking')}}...</ion-content>
+<ion-content *ngIf="data">
+  <span>
+    <h4 class="ion-text-center">{{t('Manage Booking')}}</h4>
+  </span>
+
+  <ion-searchbar
+    class="searchBar"
+    [placeholder]="t('Search Booking ID or Username')"
+    type="text"
+    [(ngModel)]="searchText"
+    (ngModelChange)="applyFilter()"
+  ></ion-searchbar>
+
+  <div
+    style="background-color: #ffd675; height: 2rem"
+    *ngIf="!openFilterRadio"
+    (click)="openFilterRadio = true"
+    class="ion-text-center"
+  >
+    {{t('FILTER BY BOOKING STATUS')}}
+    <ion-icon name="chevron-down-outline"></ion-icon>
+  </div>
+  <div *ngIf="openFilterRadio">
+    <div
+      style="background-color: #ffd675; height: 2rem"
+      (click)="openFilterRadio = false"
+      class="ion-text-center"
+    >
+      {{t('FILTER BY BOOKING STATUS')}}
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </div>
+    <ion-list>
+      <ion-radio-group
+        [(ngModel)]="statusFilter"
+        (ngModelChange)="applyFilter()"
+        [allowEmptySelection]="true"
+      >
+        <ion-item *ngFor="let status of statusList">
+          <ion-radio [value]="status" justify="space-between"
+            >{{status}} ({{filterByStatus(status).length}})</ion-radio
+          >
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </div>
+
+  <ng-container *ngFor="let booking of matchedResult; let i =index">
+    <ion-card
+      button
+      class="cardContainer"
+      (click)="goToBookingDetailsPage(booking.id)"
+    >
+      <div class="cardHeader">{{t('Booking ID')}}: {{booking.id}}</div>
+      <div class="text">{{booking.service.name}}</div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Booked by')}}: </span>
+        {{booking.user.username}}
+      </div>
+
+      <div class="text">
+        <span class="textForColorBlue">{{t('Submit Booking Time')}}: </span>
+
+        {{booking.booking_submit_time|date:dateFormat }}
+      </div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Status')}}: </span>
+        <span
+          class="textForColorPurple"
+          *ngIf="!booking.booking_accept_time && !booking.booking_cancel_time && !booking.booking_reject_time"
+          >{{t('Pending')}}</span
+        >
+
+        <span
+          class="textForColorGreen"
+          *ngIf="booking.booking_accept_time && !booking.booking_cancel_time && !booking.booking_reject_time"
+          >{{t('Accepted')}}</span
+        >
+        <span
+          class="textForColorRed"
+          *ngIf="!booking.booking_accept_time && !booking.booking_cancel_time && booking.booking_reject_time"
+          >{{t('Rejected')}}</span
+        >
+        <span class="textForColorRed" *ngIf="booking.booking_cancel_time"
+          >{{t('Cancelled')}}</span
+        >
+      </div>
+      <div
+        class="text"
+        [hidden]="booking.booking_reject_time || booking.booking_cancel_time"
+      >
+        <span class="textForColorBlue">{{t('Payment')}}: </span>
+
+        <span
+          *ngIf="booking.paid_deposit_time || booking.paid_fully_time"
+          class="textForColorGreen"
+          >{{t('Paid')}}</span
+        >
+        <span
+          *ngIf="!booking.paid_deposit_time && !booking.paid_fully_time"
+          class="textForColorRed"
+        >
+          <ion-icon name="warning-outline"></ion-icon>{{t('Didn\'t pay')}}</span
+        >
+      </div>
+    </ion-card>
+  </ng-container>
+</ion-content>

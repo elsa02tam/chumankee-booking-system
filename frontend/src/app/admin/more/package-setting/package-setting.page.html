@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Plan Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading Plan')}}...</ion-content>
+<ion-content *ngIf="data">
+  <ion-buttons style="display: flex; justify-content: center; margin-top: 1rem">
+    <ion-button (click)="addNewPlan()" fill="outline" color="tertiary"
+      >{{t('Add Plan')}}</ion-button
+    >
+  </ion-buttons>
+  <ion-list *ngFor="let plan of plans">
+    <ion-card class="cardContainer">
+      <ion-item>
+        <ion-label position="stacked">{{t('Plan Type')}}</ion-label>
+        <ion-select [(ngModel)]="plan.by" (ngModelChange)="clearPlanBy(plan)">
+          <ion-select-option value="service">
+            {{t('Specific Service')}}
+          </ion-select-option>
+          <ion-select-option value="service_type">
+            {{t('Service Type')}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="plan.by === 'service_type'">
+        <ion-label position="stacked">{{t('Service Type')}}</ion-label>
+        <ion-select [(ngModel)]="plan.service_type_id">
+          <ion-select-option
+            *ngFor="let row of data.service_types"
+            [value]="row.id"
+          >
+            {{row.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="plan.by === 'service'">
+        <ion-label position="stacked">{{t('Specific Service')}}</ion-label>
+        <ion-select [(ngModel)]="plan.service_id">
+          <ion-select-option
+            *ngFor="let row of  data.services"
+            [value]="row.id"
+          >
+            {{row.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item
+        ><ion-label position="stacked">{{t('Title')}}</ion-label>
+        <ion-input
+          [(ngModel)]="plan.title"
+          type="text"
+          [placeholder]="t('Enter text')"
+        ></ion-input>
+      </ion-item>
+      <ion-item
+        ><ion-label position="stacked">{{t('Description')}}</ion-label>
+        <ion-input
+          [(ngModel)]="plan.desc"
+          type="text"
+          [placeholder]="t('Enter text')"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item
+        ><ion-label position="stacked">{{t('Weekly Quota')}}</ion-label>
+        <ion-input
+          [(ngModel)]="plan.weekly_quota"
+          [placeholder]="t('Enter number')"
+          type="number"
+          min="0"
+          step="1"
+        ></ion-input
+      ></ion-item>
+      <ion-item
+        ><ion-label position="stacked">{{t('Total Quota')}}</ion-label>
+        <ion-input
+          [(ngModel)]="plan.quota"
+          [placeholder]="t('Enter number')"
+          type="number"
+          min="0"
+          step="1"
+        ></ion-input
+      ></ion-item>
+      <ion-item
+        ><ion-label position="stacked">{{t('Expire Month')}}</ion-label>
+        <ion-input
+          [(ngModel)]="plan.expire_month"
+          [placeholder]="t('Enter number')"
+          type="number"
+          min="0"
+          step="1"
+        ></ion-input
+      ></ion-item>
+
+      <ion-buttons
+        style="display: flex; justify-content: center; margin: 1rem 0"
+      >
+        <ion-button (click)="savePlan(plan)" fill="outline">
+          {{plan.id > 0 ? t('Update') : t('Add Plan') }}
+        </ion-button>
+      </ion-buttons>
+    </ion-card>
+  </ion-list>
+</ion-content>

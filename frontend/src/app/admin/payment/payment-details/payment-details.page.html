@@ -1,0 +1,84 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/payment"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="data">
+  <h4 class="ion-text-center">Payment Details</h4>
+  <ion-card>
+    <div>Payment ID: {{data.payment.id}}</div>
+    <div *ngIf="data.payment.order_id">Order ID: {{data.payment.order_id}}</div>
+    <div>Booking ID: {{data.payment.booking_id}}</div>
+    <div>Remark: {{data.payment.remark}}</div>
+    <div class="text">
+      <span style="color: #184371">Receipt: </span>
+      <img [src]="toImageSrc(data.payment.filename)" />
+    </div>
+    <div>Submit on {{data.payment.submit_time |date:dateFormat}}</div>
+  </ion-card>
+
+  <!------------------------------------- loop order array  -->
+  <ng-container *ngFor="let order of data.orders">
+    <h4>order</h4>
+    <div>checkout time: {{order.checkout_time|date:dateFormat}}</div>
+    <div>full paid time: {{order.full_pay_time|date:dateFormat}}</div>
+    <div>full pay amount: {{order.full_pay_amount}}</div>
+    <div>full pay deadline: {{order.full_pay_deadline |date:dateFormat}}</div>
+    <div>deposit time: {{order.deposit_time|date:dateFormat}}</div>
+    <div>deposit amount: {{order.deposit_amount}}</div>
+    <div>deposit deadline: {{order.deposit_deadline |date:dateFormat}}</div>
+    <div>coupon code: {{order.coupon_code}}</div>
+    <div>coupon discount: {{order.discount_amount}}</div>
+    <div>coupon expired: {{order.expired_time|date:dateFormat}}</div>
+    <div>username: {{order.username}}</div>
+    <span *ngFor="let orderPart of order.parts">
+      <div>product {{orderPart.product_id}}: {{orderPart.name}}</div>
+      <div>product price: {{orderPart.price}}</div>
+      <div>product type: {{orderPart.type}}</div>
+    </span>
+    <ion-button fill="outline" color="secondary" size="small">
+      Receive Deposit (Payme)
+    </ion-button>
+    <ion-button fill="outline" color="secondary" size="small">
+      Receive Full Pay (Payme)
+    </ion-button>
+    <ion-button fill="outline" color="secondary" size="small">
+      Set full pay payment deadline
+    </ion-button>
+    <ion-button fill="outline" color="secondary" size="small">
+      Set deposit payment deadline
+    </ion-button>
+  </ng-container>
+
+  <!------------------------------------- loop booking array  -->
+  <ng-container *ngFor="let booking of data.bookings">
+    <h4>booking</h4>
+    <div>paid_fully time: {{booking.paid_fully_time|date:dateFormat}}</div>
+    <div>paid deposit time: {{booking.paid_deposit_time|date:dateFormat}}</div>
+    <div>promo code: {{booking.promo_code_id}}</div>
+    <div>username: {{booking.username}}</div>
+    <div>coupon code: {{booking.coupon_code}}</div>
+    <div>discount: {{booking.discount_amount}}</div>
+    <div>coupon expired: {{booking.expired_time}}</div>
+    <div>booking price: {{booking.price}}</div>
+    <div>booked service: {{booking.service_name}}</div>
+
+    <div>plan: {{booking.plan_id}}</div>
+    <div>plan expired: {{booking.expire_time}}</div>
+    <div>plan type name: {{booking.type_name}}</div>
+    <div>plan quota: {{booking.quota}}</div>
+    <div>plan weekly quota: {{booking.weekly_quota}}</div>
+    <ion-button fill="outline" color="secondary" size="small">
+      Receive Deposit (Payme)
+    </ion-button>
+    <ion-button fill="outline" color="secondary" size="small">
+      Receive Full Pay (Payme)
+    </ion-button>
+    <ion-button fill="outline" color="secondary" size="small">
+      Set payment deadline
+    </ion-button>
+  </ng-container>
+</ion-content>

@@ -1,0 +1,204 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/consumer/profile"></ion-back-button>
+      <ion-title>{{t('Order History')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment mode="md" [(ngModel)]="filter" (ngModelChange)="applyFilter()">
+    <ion-segment-button value="pending">{{t('Pending')}}</ion-segment-button>
+    <ion-segment-button value="to-pay">{{t('Need to Pay')}}</ion-segment-button>
+    <ion-segment-button value="paid">{{t('Paid')}}</ion-segment-button>
+  </ion-segment>
+
+  <ion-list>
+    <ion-card
+      class="cardContainer"
+      *ngFor="let item of items"
+      [style.display]="!printItem || printItem === item ? 'block' : 'none'"
+    >
+      <ng-container *ngIf="item.order as order">
+        <h1 *ngIf="printItem == item">{{t('Receipt')}}</h1>
+        <div class="cardHeader">
+          {{t('Order ID')}}: {{order.t_shopping_order_id}}
+          <ion-button
+            style="margin-left: 6rem"
+            fill="outline"
+            class="print-button"
+            size="small"
+            color="tertiary"
+            (click)="print(item)"
+          >
+            <ion-icon name="print-outline" slot="start"></ion-icon>
+            {{t('Print')}}</ion-button
+          >
+        </div>
+        <div class="text">
+          <span class="textForColorBlue">{{t('Checkout on')}} </span>
+          {{order.checkout_time|date:dateFormat}}
+        </div>
+
+        <div
+          *ngIf="!order.deposit_amount &&!order.full_pay_deadline"
+          class="text"
+          style="color: red"
+        >
+          *{{t('Waiting admin to set deposit amount')}}*
+        </div>
+        <div *ngIf="order.deposit_amount" class="text">
+          <div>
+            <span class="textForColorBlue">{{t('Deposit Amount')}}: </span>
+
+            {{order.deposit_amount}}
+          </div>
+          <div *ngIf="order.deposit_time">
+            <span class="textForColorBlue"
+              >{{t('Received Deposit Time')}}:
+            </span>
+
+            {{order.deposit_time|date:dateFormat}}
+          </div>
+          <div *ngIf="!order.deposit_time">
+            <span class="textForColorBlue">{{t('Deposit Deadline')}}: </span>
+            {{order.deposit_deadline |date:dateFormat}}
+            <ion-button
+              (click)="item.showQrCode=true"
+              fill="outline"
+              color="secondary"
+              size="small"
+            >
+              {{t('Pay Deposit (Payme)')}}
+            </ion-button>
+            <ion-button
+              (click)="pay(order.t_shopping_order_id,'deposit')"
+              fill="outline"
+              color="secondary"
+              size="small"
+              [hidden]="shouldHide()"
+            >
+              {{t('Pay Deposit (Stripe)')}}
+            </ion-button>
+            <img
+              *ngIf="item.showQrCode"
+              (click)="item.showQrCode=false"
+              [src]="item.qrCode"
+            />
+          </div>
+          <img
+            src="/assets/payme_qrcode.png"
+            alt="Payme QR Code"
+            style="width: 12rem; height: 12rem; object-fit: cover"
+          />
+        </div>
+
+        <div *ngIf="!order.full_pay_amount" class="text" style="color: red">
+          *{{t('Waiting admin to set full pay amount')}}*
+        </div>
+        <div *ngIf="order.full_pay_amount" class="text">
+          <div>
+            <span class="textForColorBlue">{{t('Full Pay Amount')}}: </span>
+            {{order.full_pay_amount}}
+          </div>
+          <div *ngIf="order.full_pay_time">
+            <span class="textForColorBlue"
+              >{{t('Received Full Pay Time')}}:
+            </span>
+            {{order.full_pay_time|date:dateFormat}}
+          </div>
+          <div *ngIf="!order.full_pay_time">
+            <span class="textForColorBlue">{{t('Full Pay Deadline')}}: </span>
+            {{order.full_pay_deadline |date:dateFormat}}
+            <ion-button
+              (click)="item.showQrCode=true"
+              fill="outline"
+              color="secondary"
+              size="small"
+            >
+              {{t('Full Pay (Payme)')}}
+            </ion-button>
+            <ion-button
+              (click)="pay(order.t_shopping_order_id,'full-pay')"
+              fill="outline"
+              color="secondary"
+              size="small"
+              [hidden]="shouldHide()"
+            >
+              {{t('Full Pay (Stripe)')}}
+            </ion-button>
+            <img
+              *ngIf="item.showQrCode"
+              (click)="item.showQrCode=false"
+              [src]="item.qrCode"
+            />
+          </div>
+          <img
+            src="/assets/payme_qrcode.png"
+            alt="Payme QR Code"
+            style="width: 12rem; height: 12rem; object-fit: cover"
+          />
+        </div>
+
+        <div class="text">
+          <span class="textForColorBlue">{{t('Coupon Code')}}: </span>
+          {{order.coupon_code}}
+        </div>
+        <div class="text">
+          <span class="textForColorBlue">{{t('Coupon Discount')}}: </span>
+          {{order.discount_amount}}
+        </div>
+        <div *ngFor="let orderPart of item.parts; index as i">
+          <div class="text">
+            <span class="textForColorBlue"
+              >{{t('Order Part')}} #{{i + 1}}:
+            </span>
+
+            {{orderPart.name}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Product Price')}}: </span>
+
+            {{orderPart.price}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Product Type')}}: </span>
+
+            {{orderPart.type}}
+          </div>
+        </div>
+
+        <ng-container *ngFor="let payment of item.payments">
+          <div class="text">
+            <span class="textForColorBlue">{{t('Payment')}} </span>
+            {{t('Payment')}} #{{payment.id}}
+          </div>
+          <div *ngIf="payment.filename" class="text">
+            <span class="textForColorBlue">{{t('Receipt')}}: </span>
+            <img
+              [src]="toImageSrc(payment.filename)"
+              style="width: 12rem; height: 12rem; object-fit: cover"
+            />
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Submit Order Time')}}: </span>
+            {{payment.submit_time|date:dateFormat}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Remark')}}: </span>
+            {{payment.remark}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Accept Order Time')}}: </span>
+            {{payment.accept_time|date:dateFormat}}
+          </div>
+          <div class="text">
+            <span class="textForColorBlue">{{t('Reject Order Time')}}: </span>
+            {{payment.reject_time|date:dateFormat}}
+          </div>
+        </ng-container>
+      </ng-container>
+    </ion-card>
+  </ion-list>
+</ion-content>

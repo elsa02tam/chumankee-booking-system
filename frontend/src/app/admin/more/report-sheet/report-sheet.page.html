@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Report Sheet')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="balanceSheetCard">
+    <h4 class="balanceSheetHeader">{{t('Report Sheet')}}</h4>
+    <div style="display: flex; align-items: center; justify-content: center">
+      {{t('Up To')}}{{today}}
+    </div>
+
+    <div class="allText">
+      <br />
+      <div class="subTitle">{{t('User Details')}}</div>
+      <div class="details">
+        <span class="subDetails">{{t('Registered Consumer')}}</span>
+        <span>{{nonAdminUserNumber}}</span>
+      </div>
+      <div class="details">
+        <span class="subDetails">{{t('Admin')}}</span>
+        <span>{{adminNumber}}</span>
+      </div>
+      <div class="details">
+        <span class="subDetails">{{t('Total User')}}</span>
+        <span>{{userNumber}}</span>
+      </div>
+      <br />
+
+      <div class="subTitle">{{t('Booking Details')}}</div>
+      <div class="details">
+        <span class="subDetails">{{t('Pending Booking')}}</span>
+        <span>{{pendingBookingNumber}}</span>
+      </div>
+      <div class="details">
+        <span class="subDetails">{{t('Accepted Booking')}}</span>
+        <span>{{acceptedBookingNumber}}</span>
+      </div>
+      <div class="details">
+        <span class="subDetails">{{t('Rejected Booking')}}</span>
+        <span>{{rejectedBookingNumber}}</span>
+      </div>
+      <div class="details">
+        <span class="subDetails">{{t('Cancelled Booking')}}</span>
+        <span>{{cancelledBookingNumber}}</span>
+      </div>
+      <div class="details">
+        <span class="subDetails">{{t('Total Booking')}}</span>
+        <span>{{bookingNumber}}</span>
+      </div>
+      <br />
+
+      <div class="subTitle">{{t('Sales Details')}}</div>
+      <div class="details">
+        <span class="subDetails">{{t('Total Service Sales')}}</span>
+        <span>{{bookingSales}}</span>
+      </div>
+      <div class="details">
+        <span class="subDetails">{{t('Total Product Sales')}}</span>
+        <span>{{orderSales}}</span>
+      </div>
+      <br />
+    </div>
+  </div>
+</ion-content>

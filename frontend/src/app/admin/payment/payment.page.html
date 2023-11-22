@@ -1,0 +1,66 @@
+<ion-content *ngIf="!data"></ion-content>
+
+<ion-content *ngIf="data">
+  <h4 class="ion-text-center">{{t('Manage Payment')}}</h4>
+
+  <ion-searchbar
+    class="searchBar"
+    [placeholder]="t('Search Payment ID')"
+    type="text"
+    [(ngModel)]="paymentId"
+    (ngModelChange)="searchBar()"
+  ></ion-searchbar>
+
+  <ion-segment [(ngModel)]="tab">
+    <ion-segment-button value="booking">{{t('Booking')}}</ion-segment-button>
+    <ion-segment-button value="order">{{t('Product')}}</ion-segment-button>
+  </ion-segment>
+
+  <!-- For Booking UI -->
+  <ng-container *ngIf="tab ==='booking'">
+    <ion-card
+      class="cardContainer"
+      *ngFor="let row of matchedResult?.booking_payments;let i =index"
+    >
+      <span (click)="goToPaymentDetailsPage(row.payment.id)">
+        <div class="cardHeader">Payment ID {{row.payment.id}}</div>
+        <div class="text">{{row.payment.order_id}} order</div>
+        <div class="text">
+          <span style="color: #184371">Submit Time</span>
+          {{row.payment.submit_time |date:dateFormat}}
+        </div>
+        <div class="text">
+          <span style="color: #184371">Receipt: </span>
+          <img [src]="toImageSrc(row.payment.filename)" />
+        </div>
+        <!-- <div class="text" *ngIf="!row.payment.reject_time && !row.booking.reject_time">
+        <ion-buttons>
+          <ion-button>Accept</ion-button>
+          <ion-button>Reject</ion-button>
+        </ion-buttons>
+      </div> -->
+      </span>
+    </ion-card>
+  </ng-container>
+
+  <!-- For Product UI -->
+  <ng-container *ngIf="tab ==='order'">
+    <ion-card
+      class="cardContainer"
+      *ngFor="let row of matchedResult?.order_payments;let i =index"
+    >
+      <span (click)="goToPaymentDetailsPage(row.payment.id)">
+        <div class="cardHeader">Payment ID {{row.payment.id}}</div>
+        <div class="text">{{row.payment.order_id}} order</div>
+        <div class="text">
+          <span style="color: #184371">Submit Time</span>
+          {{row.payment.submit_time |date:dateFormat}}
+        </div>
+        <div class="text">
+          <span style="color: #184371">Receipt: </span>
+          <img [src]="toImageSrc(row.payment.filename)" />
+        </div>
+      </span>
+    </ion-card>
+  </ng-container>
+</ion-content>

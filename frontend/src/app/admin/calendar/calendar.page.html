@@ -1,0 +1,137 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> {{t('Calendar')}} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [(ngModel)]="viewMode" (ngModelChange)="calcWeeks()">
+    <ion-segment-button value="month">
+      <ion-label>{{t('Month')}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="week">
+      <ion-label>{{t('Week')}}</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="day">
+      <ion-label>{{t('Day')}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-item>
+    <ion-select label="{{t('Service')}}" [(ngModel)]="selected_service_id">
+      <ion-select-option [value]="0">{{t('All')}}</ion-select-option>
+      <ion-select-option *ngFor="let option of services" [value]="option.id"
+        >{{option.label}}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-select
+      label="{{t('Service Provider')}}"
+      [(ngModel)]="selected_service_provider_id"
+    >
+      <ion-select-option [value]="0">{{t('All')}}</ion-select-option>
+      <ion-select-option
+        *ngFor="let option of serviceProviders"
+        [value]="option.id"
+        >{{option.label}}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-select label="{{t('Consumer')}}" [(ngModel)]="selected_client_id">
+      <ion-select-option [value]="0">{{t('All')}}</ion-select-option>
+      <ion-select-option *ngFor="let option of clients" [value]="option.id"
+        >{{option.label}}</ion-select-option
+      >
+    </ion-select>
+  </ion-item>
+
+  <!-- Month view -->
+  <div
+    class="calendar-month-view"
+    *ngIf="viewMode == 'month' || viewMode == 'week'"
+  >
+    <!-- Month view content here -->
+    <div class="calendar-month-view active">
+      <div class="calendar-header">
+        <button (click)="prevMonth()">{{t('Prev')}}</button>
+        <div class="calendar-month-name" style="color: #2a9d8f">
+          {{ currentViewTitle }}
+        </div>
+
+        <button (click)="nextMonth()">{{t('Next')}}</button>
+      </div>
+      <div class="calendar-body">
+        <div class="calendar-weekdays">
+          <div class="calendar-weekday">{{t('Sun')}}</div>
+          <div class="calendar-weekday">{{t('Mon')}}</div>
+          <div class="calendar-weekday">{{t('Tue')}}</div>
+          <div class="calendar-weekday">{{t('Wed')}}</div>
+          <div class="calendar-weekday">{{t('Thu')}}</div>
+          <div class="calendar-weekday">{{t('Fri')}}</div>
+          <div class="calendar-weekday">{{t('Sat')}}</div>
+        </div>
+        <div class="calendar-days">
+          <div
+            *ngFor="let day of days"
+            class="calendar-day"
+            (click)="selectByTime(day.time)"
+          >
+            <div class="calendar-day-number">{{ day.date }}</div>
+            <div class="calendar-day-events">
+              <div
+                *ngFor="let event of day.events"
+                class="calendar-day-event-circle"
+                [style.backgroundColor]="event.color"
+                [hidden]="
+                (selected_service_id > 0 && selected_service_id != event.service_id)
+                ||
+                (selected_service_provider_id > 0 && selected_service_provider_id != event.provider_id)
+                ||
+                (selected_client_id > 0 && selected_client_id != event.user_id)
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day view -->
+  <div class="calendar-day-view" *ngIf="viewMode == 'day'">
+    <!-- Day view content here -->
+    <div class="calendar-day-view">
+      <div class="calendar-header">
+        <button (click)="prevMonth()">{{t('Prev')}}</button>
+
+        <div class="calendar-day-name" style="color: #2a9d8f">
+          {{ currentViewTitle }}
+        </div>
+        <button (click)="nextMonth()">{{t('Next')}}</button>
+      </div>
+      <div class="calendar-body">
+        <div class="calendar-day-events">
+          <div
+            *ngFor="let event of currentDayEvents"
+            class="calendar-day-event"
+          >
+            <div class="calendar-day-event-title">{{ event.service_name }}</div>
+            <div class="calendar-day-event-time">
+              {{t('Time')}}: {{ event.t_service_booking_from_time|date:'HH:mm'
+              }} - {{ event.t_service_booking_to_time|date:'HH:mm' }}
+            </div>
+            <div>
+              <span>{{t('Service Provider')}}: </span>
+              <span [style.color]="event.color"
+                >{{event.provider_username}}</span
+              >
+            </div>
+            <div>{{t('Consumer')}}: {{event.user_username}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

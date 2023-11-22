@@ -1,0 +1,72 @@
+<ion-content *ngIf="!data">{{t('Loading booking')}}...</ion-content>
+<ion-content *ngIf="data">
+  <h4 class="ion-text-center">{{t('Manage Booking')}}</h4>
+  <ion-searchbar
+    class="searchBar"
+    [placeholder]="t('Search Booking ID')"
+    type="text"
+    [(ngModel)]="bookingId"
+    (ngModelChange)="searchBar()"
+  >
+  </ion-searchbar>
+
+  <ng-container *ngFor="let booking of matchedResult; let i =index">
+    <ion-card
+      class="cardContainer"
+      (click)="goToBookingDetailsPage(booking.id)"
+    >
+      <div class="cardHeader">{{t('Booking ID')}}: {{booking.id}}</div>
+      <div class="text">{{booking.service.name}}</div>
+      <div class="text">
+        <span style="color: #184371">{{t('Provider')}}: </span>
+        {{booking.provider.name}}
+      </div>
+
+      <div class="text">
+        <span style="color: #184371">{{t('Submit Booking Time')}}: </span>
+        <div>
+          {{t('Hong Kong Time Zone')}}
+          {{booking.booking_submit_time|date:dateFormat }}
+        </div>
+      </div>
+      <div class="text">
+        <span style="color: #184371">{{t('Booked Time')}}: </span>
+        <div>
+          {{t('Hong Kong Time Zone')}} {{t('From')}}
+          {{booking.from_time|date:dateFormat}} {{t('To')}}
+          {{booking.to_time|date:dateFormat}}
+        </div>
+      </div>
+      <div class="text" *ngIf="!booking.booking_accept_time">
+        <span style="color: #184371">{{t('Status')}}: </span>
+        <span *ngIf="booking.booking_reject_time" style="color: #fc6aa0">
+          <ion-icon name="sad-outline"></ion-icon>
+          {{t('Rejected')}}
+        </span>
+        <span *ngIf="!booking.booking_reject_time" style="color: #8f8f2a">
+          <ion-icon name="hourglass-outline"></ion-icon>
+          {{t('Waiting admin to accept')}}
+        </span>
+      </div>
+      <div class="text" *ngIf="booking.booking_accept_time">
+        <span style="color: #184371">{{t('Payment Status')}}: </span>
+
+        <span *ngIf="!booking.paid_deposit_time" style="color: #fc6aa0">
+          <ion-icon name="warning-outline"></ion-icon>
+          {{t('Need to pay deposit')}}</span
+        >
+        <span
+          *ngIf="booking.paid_deposit_time && !booking.paid_fully_time"
+          style="color: #fc6aa0"
+        >
+          <ion-icon name="warning-outline"></ion-icon>{{t('Need to full pay')}}
+        </span>
+        <span
+          *ngIf="booking.paid_deposit_time && booking.paid_fully_time"
+          style="color: #2a9d8f"
+          >{{t('Paid')}}</span
+        >
+      </div>
+    </ion-card>
+  </ng-container>
+</ion-content>

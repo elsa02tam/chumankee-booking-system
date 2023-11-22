@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title> {{t('Calendar')}} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-segment [(ngModel)]="viewMode" (ngModelChange)="calcWeeks()">
+    <ion-segment-button value="month-with-all">
+      <ion-label>{{t('Month')}} ({{t('All')}})</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="upcoming-week">
+      <ion-label>{{t('Upcoming Week')}}</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-item>
+    <ion-checkbox [(ngModel)]="show_finished_only" (ngModelChange)="calcWeeks()"
+      >{{t('Finished Booking')}}</ion-checkbox
+    >
+  </ion-item>
+
+  <!-- Month view -->
+  <div class="calendar-month-view">
+    <!-- Month view content here -->
+    <div class="calendar-month-view active">
+      <div class="calendar-header">
+        <button (click)="prevMonth()">{{t('Prev')}}</button>
+        <div class="calendar-month-name" style="color: #2a9d8f">
+          {{ currentViewTitle }}
+        </div>
+
+        <button (click)="nextMonth()">{{t('Next')}}</button>
+      </div>
+      <div class="calendar-body">
+        <div class="calendar-weekdays">
+          <div class="calendar-weekday">{{t('Sun')}}</div>
+          <div class="calendar-weekday">{{t('Mon')}}</div>
+          <div class="calendar-weekday">{{t('Tue')}}</div>
+          <div class="calendar-weekday">{{t('Wed')}}</div>
+          <div class="calendar-weekday">{{t('Thu')}}</div>
+          <div class="calendar-weekday">{{t('Fri')}}</div>
+          <div class="calendar-weekday">{{t('Sat')}}</div>
+        </div>
+        <div class="calendar-days">
+          <div *ngFor="let day of days" class="calendar-day">
+            <div class="calendar-day-number">{{ day.date }}</div>
+            <div class="calendar-day-events">
+              <div
+                *ngFor="let event of day.events"
+                class="calendar-day-event-circle"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ion-card *ngFor="let booking of currentDayEvents; let i = index">
+    <div class="text" style="color: #184371; margin-top: 0.5rem">
+      {{t('Booking')}}({{i+1}}) {{booking.service_name}}
+    </div>
+    <div class="text">
+      {{t('Time')}}: {{booking.t_service_booking_from_time |date:dateFormat}}
+      {{t('To')}} {{booking.t_service_booking_to_time |date:timeFormat }}
+    </div>
+    <div class="text">
+      {{t('Service Provider')}}: {{booking.provider_username}}
+    </div>
+    <div class="text" style="color: #2a9d8f" *ngIf="booking.t_check_in_time">
+      ***{{t('Finished')}}***
+    </div>
+  </ion-card>
+</ion-content>

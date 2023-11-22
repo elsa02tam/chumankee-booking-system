@@ -1,0 +1,76 @@
+<ion-content>
+  <header>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/guest/welcome"></ion-back-button>
+    </ion-buttons>
+  </header>
+
+  <ion-card>
+    <ion-card-header class="ion-text-center">REGISTER</ion-card-header>
+    <ion-item
+      ><ion-label position="stacked">Username</ion-label>
+      <ion-input
+        type="text"
+        [placeholder]="t('Enter Your Username')"
+        [(ngModel)]="username"
+      ></ion-input>
+    </ion-item>
+
+    <ion-note class="restrictions">
+      The username must be at least 5 characters and no more than 20 characters
+      long, contain at least one uppercase characters, at least one lowercase
+      characters and at least one number.</ion-note
+    >
+
+    <ion-item
+      ><ion-label position="stacked">Phone</ion-label>
+      <ion-input
+        type="phone"
+        [placeholder]="t('Enter Your Phone')"
+        [(ngModel)]="phone"
+      ></ion-input>
+    </ion-item>
+    <ion-item
+      ><ion-label position="stacked">Email </ion-label>
+      <ion-input
+        type="email"
+        [placeholder]="t('Enter Your Email')"
+        [(ngModel)]="email"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item
+      ><ion-label position="stacked">Password</ion-label>
+      <ion-input
+        [type]="watchPassword ? 'text' : 'password'"
+        [placeholder]="t('Enter Your Password')"
+        [(ngModel)]="password"
+      ></ion-input>
+      <ion-buttons slot="end">
+        <ion-button (click)="watchPassword = !watchPassword">
+          <ion-icon
+            [name]="watchPassword ? 'eye' : 'eye-off-outline'"
+          ></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+
+    <ion-note class="restrictions">
+      The password must be at least 7 characters and no more than 16 characters
+      long, contain at least one number.
+    </ion-note>
+
+    <ion-buttons class="registerBtn">
+      <ion-button fill="outline" (click)="registerAccount()"
+        >Register</ion-button
+      >
+    </ion-buttons>
+  </ion-card>
+
+  <div class="hadAcText">
+    <ion-note>
+      Already have an account?
+      <a routerLink="/guest/login"> Login</a>
+    </ion-note>
+  </div>
+</ion-content>

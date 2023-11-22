@@ -1,0 +1,147 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Company Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content *ngIf="!company"> {{t('Loading company details')}}...</ion-content>
+<ion-content *ngIf="company">
+  <div class="ion-text-center">
+    <ion-button
+      class="updateBtn"
+      fill="outline"
+      color="tertiary"
+      (click)="addHoliday()"
+    >
+      {{t('Add Holiday')}}
+    </ion-button>
+  </div>
+
+  <ion-card class="cardContainer" *ngFor="let holiday of company.holidays">
+    <ion-note class="cardHeader">{{t('Holiday')}}</ion-note>
+    <ion-item>
+      <ion-label position="stacked">{{t('Holiday Name')}}</ion-label>
+      <ion-input type="text" [(ngModel)]="holiday.remark"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">{{t('From')}}</ion-label>
+      <ion-input
+        type="datetime-local"
+        [(ngModel)]="holiday.from_time"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">{{t('To')}}</ion-label>
+      <ion-input
+        type="datetime-local"
+        [(ngModel)]="holiday.to_time"
+      ></ion-input>
+    </ion-item>
+    <ion-buttons class="updateBtnContainer">
+      <ion-button
+        class="updateBtn"
+        fill="solid"
+        color="primary"
+        (click)="saveHoliday(holiday)"
+      >
+        {{holiday.id?'Update' : 'Add'}}
+      </ion-button>
+      <ion-button
+        class="updateBtn"
+        fill="solid"
+        color="dark"
+        (click)="delHoliday(holiday.id)"
+      >
+        {{t('Delete')}}
+      </ion-button>
+    </ion-buttons>
+  </ion-card>
+
+  <ion-card class="cardContainer">
+    <ion-item-divider style="background-color: rgb(222, 223, 224)">
+      {{t('Cancel Booking Time Setting')}}
+    </ion-item-divider>
+    <ion-item>
+      <ion-label position="stacked"
+        >{{t('Time')}} *per day before the booking*</ion-label
+      >
+      <ion-input
+        type="number"
+        min="0"
+        step="1"
+        placeholder="please input the number"
+        [(ngModel)]="allow_cancel_booking_days"
+      ></ion-input>
+    </ion-item>
+    <ion-buttons
+      style="display: flex; justify-content: center; margin: 0.5rem 0"
+    >
+      <ion-button fill="outline" (click)="saveAllowCancelBookingTime()"
+        >{{t('Set Cancel Time')}}</ion-button
+      >
+    </ion-buttons>
+  </ion-card>
+
+  <ion-card class="cardContainer">
+    <ion-note class="cardTitle">{{t('Operation Time')}}</ion-note>
+
+    <div
+      class="weekContainer"
+      *ngFor="let operationTime of company?.serviceTimes"
+    >
+      <ion-item-divider style="background-color: rgb(222, 223, 224)">
+        {{weekdayLabels[operationTime.week_day]}}
+      </ion-item-divider>
+
+      <ng-container *ngIf="!operationTime.from_time && !operationTime.to_time">
+        <ion-note class="ion-margin">({{t('N/A')}})</ion-note>
+        <ion-buttons
+          style="display: flex; justify-content: center; margin-top: 0.5rem"
+        >
+          <ion-button (click)="setOperationTime(operationTime)" fill="outline"
+            >{{t('Set Operation Time')}}</ion-button
+          >
+        </ion-buttons>
+      </ng-container>
+      <ng-container *ngIf="operationTime.from_time || operationTime.to_time">
+        <ion-item>
+          <ion-label class="week" position="stacked">{{t('Start')}}</ion-label>
+          <ion-input
+            type="time"
+            [(ngModel)]="operationTime.from_time"
+          ></ion-input>
+          <ion-note slot="end">{{t('tap to select time')}}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="week" position="stacked">{{t('End')}}</ion-label>
+          <ion-input
+            type="time"
+            [(ngModel)]="operationTime.to_time"
+          ></ion-input>
+          <ion-note slot="end">{{t('tap to select time')}}</ion-note>
+        </ion-item>
+        <ion-buttons
+          style="display: flex; justify-content: center; margin-top: 0.5rem"
+        >
+          <ion-button (click)="setNoOperationTime(operationTime)" fill="outline"
+            >{{t('Set N/A')}}</ion-button
+          >
+        </ion-buttons>
+      </ng-container>
+    </div>
+
+    <ion-buttons class="updateBtnContainer">
+      <ion-button
+        class="updateBtn"
+        fill="solid"
+        color="medium"
+        (click)="saveOperationTime()"
+      >
+        {{t('Update')}}
+      </ion-button>
+    </ion-buttons>
+  </ion-card>
+</ion-content>

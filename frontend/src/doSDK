@@ -1,0 +1,76 @@
+import {ResponseEntity} from "./backend-types/util/responseJSON";
+
+export let api_origin = 'http://localhost:3000'
+
+export function callWithQuery(method: string, url: string, input: object) {
+  return fetch(api_origin + url + '?' + new URLSearchParams(Object.entries(input)), {
+    method,
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    }
+  }).then(res=>res.json())
+    .catch(err=>({error: String(err)}))
+}
+
+export function callWithBody(method: string, url: string, input: object) {
+  return fetch(api_origin + url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token'),
+    },
+    body: JSON.stringify(input),
+  }).then(res=>res.json())
+    .catch(err=>({error: String(err)}))
+}
+
+
+let bookingService = {
+  postV1Booking(input: PostBookingDTO): Promise<ResponseEntity<any>> {
+    return callWithBody('POST', '/api/book/v1/booking', input)
+  },
+  delV1Booking(input: DelBookingDTO): Promise<ResponseEntity<any>> {
+    return callWithQuery('DELETE', '/api/book/v1/booking', input)
+  },
+  putV1Booking(input: PutBookingDTO): Promise<ResponseEntity<any>> {
+    return callWithBody('PUT', '/api/book/v1/booking', input)
+  },
+  getV1Record(input: GetRecordDTO): Promise<ResponseEntity<any>> {
+    return callWithQuery('GET', '/api/book/v1/record', input)
+  }
+}
+
+let userService = {
+  postV1Signup(input: UserSignUpDTO): Promise<ResponseEntity<any>> {
+    return callWithBody('POST', '/api/user/v1/signup', input)
+  },
+  postV1Login(input: LoginDTO): Promise<ResponseEntity<any>> {
+    return callWithBody('POST', '/api/user/v1/login', input)
+  },
+  postV1Admin(input: UserSignUpDTO): Promise<ResponseEntity<any>> {
+    return callWithBody('POST', '/api/user/v1/admin', input)
+  },
+  putV1Provider(input: PutProviderDTO): Promise<ResponseEntity<any>> {
+    return callWithBody('PUT', '/api/user/v1/provider', input)
+  },
+  postV1User(input: PostUserDTO): Promise<ResponseEntity<any>> {
+    return callWithBody('POST', '/api/user/v1/user', input)
+  },
+  putV1Role(input: PutUserRole): Promise<ResponseEntity<any>> {
+    return callWithBody('PUT', '/api/user/v1/role', input)
+  },
+}
+
+
+
+
+let adminService = {
+  getV1User(input: InputGetV1UserDTO): Promise<ResponseEntity<OutputGetV1UserDTO[]>> {
+    return callWithQuery('GET', '/api/admin/v1/user', input)
+  },
+}
+
+import {InputGetV1UserDTO, OutputGetV1UserDTO} from "./backend-types/services/AdminService";
+import {DelBookingDTO, GetRecordDTO, PostBookingDTO, PutBookingDTO} from "./backend-types/services/BookingService";
+import {LoginDTO, PostUserDTO, PutProviderDTO, PutUserRole, UserSignUpDTO} from "./backend-types/services/UserService";
+

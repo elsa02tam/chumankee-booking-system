@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/guest/welcome"></ion-back-button>
+    </ion-buttons>
+    <ion-title> Login </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <!-- <header></header> -->
+  <div style="height: 100px"></div>
+
+  <ion-card class="cardContainer">
+    <!-- <ion-card-header class="ion-text-center">LOGIN</ion-card-header> -->
+    <ion-item
+      ><ion-label position="stacked">Username</ion-label>
+      <ion-input
+        type="text"
+        [placeholder]="t('Enter Your Username')"
+        [(ngModel)]="username"
+      ></ion-input>
+    </ion-item>
+    <ion-item
+      ><ion-label position="stacked">Password</ion-label>
+      <ion-input
+        [type]="watchPassword ? 'text' : 'password'"
+        [placeholder]="t('Enter Your Password')"
+        [(ngModel)]="password"
+      ></ion-input>
+      <ion-buttons slot="end" class="icon">
+        <ion-button (click)="watchPassword = !watchPassword">
+          <ion-icon
+            [name]="watchPassword ? 'eye' : 'eye-off-outline'"
+          ></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+    <ion-buttons class="loginBtn">
+      <ion-button fill="outline" (click)="loginAccount()">Login</ion-button>
+      <ion-button
+        fill="outline"
+        (click)="loginWithFacebook()"
+        [hidden]="shouldHideFB()"
+        >Login FB</ion-button
+      >
+    </ion-buttons>
+    <!-- <p *ngFor="let p of msg">{{p}}</p> -->
+  </ion-card>
+
+  <div class="needAcText">
+    <ion-note>
+      Need an account?
+      <a routerLink="/guest/register"> Register</a>
+    </ion-note>
+  </div>
+</ion-content>

@@ -1,0 +1,69 @@
+<ion-content>
+  <h4 class="ion-text-center">{{t('More')}}</h4>
+  <ion-list>
+    <ion-item>
+      <ion-label>{{t('Interface Language')}}</ion-label>
+      <ion-select [(ngModel)]="lang">
+        <ion-select-option value="en">English</ion-select-option>
+        <ion-select-option value="zh_hk">繁體中文</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item-divider>{{t('More Settings')}}</ion-item-divider>
+    <ion-item button (click)="routerModel('/admin/more/company-setting')">
+      <ion-icon name="accessibility-outline"></ion-icon>
+      <ion-label class="column">{{t('Company Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/service-setting')">
+      <ion-icon name="bulb-outline"></ion-icon>
+      <ion-label class="column">{{t('Service Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/addon-service')">
+      <ion-icon name="code-working-outline"></ion-icon>
+      <ion-label class="column">{{t('Add-on Service Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/addon-product')">
+      <ion-icon name="code-working-outline"></ion-icon>
+      <ion-label class="column">{{t('Add-on Product Setting')}}</ion-label>
+    </ion-item>
+
+    <ion-item button (click)="routerModel('/admin/more/event-setting')">
+      <ion-icon name="cube-outline"></ion-icon>
+      <ion-label class="column">{{t('Event Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/package-setting')">
+      <ion-icon name="easel-outline"></ion-icon>
+      <ion-label class="column">{{t('Plan Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/coupon-setting')">
+      <ion-icon name="ticket-outline"></ion-icon>
+      <ion-label class="column">{{t('Coupon Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/upload-setting')">
+      <ion-icon name="cloud-upload-outline"></ion-icon>
+      <ion-label class="column">{{t('Upload Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/email-settings')">
+      <ion-icon name="mail-outline"></ion-icon>
+      <ion-label class="column">{{t('Email Notice Setting')}}</ion-label>
+    </ion-item>
+    <ion-item button (click)="routerModel('/admin/more/notice-setting')">
+      <ion-icon name="flower-outline"></ion-icon>
+      <ion-label class="column">{{t('Notice Setting')}}</ion-label>
+    </ion-item>
+
+    <!-- <ion-item button (click)="routerModel('/admin/more/report')">
+      <ion-icon name="stats-chart-outline"></ion-icon>
+      <ion-label class="column">{{t('Report')}}</ion-label>
+    </ion-item> -->
+
+    <ion-item button (click)="routerModel('/admin/more/report-sheet')">
+      <ion-icon name="stats-chart-outline"></ion-icon>
+      <ion-label class="column">{{t('Report')}}</ion-label>
+    </ion-item>
+
+    <ion-item button (click)="logoutAccount()">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <ion-label class="column">{{t('Logout')}}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

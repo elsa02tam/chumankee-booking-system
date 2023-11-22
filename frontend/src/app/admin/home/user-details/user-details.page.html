@@ -1,0 +1,220 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!userDetails">
+  {{t('Loading user profile')}}...</ion-content
+>
+<ion-content *ngIf="userDetails">
+  <h4 class="ion-text-center">
+    {{userDetails.userDetails.username}} {{t('\'s Profile')}}
+  </h4>
+
+  <!-- <label for="avatar-input"> -->
+  <img
+    *ngIf="userDetails.userDetails.role === 'service_provider'"
+    class="profileAvatar"
+    [src]="pic"
+    onerror="this.src='https://ionic-docs-demo-v6.vercel.app/assets/madison.jpg'"
+  />
+
+  <img
+    class="profileAvatar"
+    *ngIf="userDetails.userDetails.role === 'consumer'"
+    src="/assets/company_logo.png"
+    alt="Company Logo"
+  />
+  <ion-buttons
+    class="imgBtnContainer"
+    *ngIf="userDetails.userDetails.role ==='service_provider'"
+  >
+    <ion-button (click)="changePic()" class="imgBtn">
+      <ion-icon name="image"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+  <!-- <div>Change Photo</div>
+  </label>
+  <input id="avatar-input" type="file" accept="image/*" /> -->
+  <div class="textInCenter">
+    <span class="textForColorBlue">{{t('Email')}}: </span>
+    {{userDetails.userDetails.email}}
+  </div>
+  <div class="textInCenter">
+    <span class="textForColorBlue">{{t('Phone')}}: </span>
+    {{userDetails.userDetails.phone}}
+  </div>
+
+  <ion-card
+    class="cardContainer"
+    *ngIf="userDetails.userDetails.role ==='service_provider'"
+  >
+    <div class="cardHeader">
+      {{t('Service')}}
+      <ion-icon
+        name="add-circle-outline"
+        class="iconWithColorPurple"
+        (click)="showAddServiceModal()"
+      ></ion-icon>
+    </div>
+    <ng-container *ngFor="let service of userDetails.services; let i  = index">
+      <div class="text">{{i+1}}: {{service.service_name}}</div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Quota')}}: </span>
+        {{service.quota}}
+        <ion-buttons class="imgBtnContainer">
+          <ion-button size="small" (click)="removeService(i)" class="imgBtn">
+            <ion-icon name="trash" class="textForColorRed"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </div>
+    </ng-container>
+  </ion-card>
+
+  <ion-modal
+    [isOpen]="isShowAddServiceModal"
+    (didDismiss)="hideAddServiceModal()"
+  >
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="hideAddServiceModal()">
+              {{t('Close')}}</ion-button
+            >
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <h4 class="ion-text-center">{{t('Add Service')}}</h4>
+        <!-- <ion-note>Please enter the details</ion-note> -->
+        <ion-list>
+          <ion-item>
+            <ion-select
+              class="textForColorBlue"
+              [placeholder]="t('Select Service Type')"
+              [(ngModel)]="selectedServiceType"
+            >
+              <ion-select-option
+                *ngFor="let serviceType of serviceTypes;let i = index"
+                [value]="serviceType"
+              >
+                ({{i+1}}) {{serviceType.type_name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-select
+              class="textForColorBlue"
+              [placeholder]="t('Select Service')"
+              [disabled]="!((selectedServiceType?.services?.length || 0) > 0)"
+              [(ngModel)]="selectedService"
+            >
+              <ion-select-option
+                *ngFor="let service of selectedServiceType?.services; let i  =index "
+                [value]="service"
+              >
+                ({{i+1}}) {{service.service_name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{t('Class Quota')}}</ion-label>
+            <ion-input
+              class="textForColorBlue"
+              [(ngModel)]="serviceQuota"
+              type="number"
+              min="0"
+              step="1"
+            ></ion-input>
+          </ion-item>
+        </ion-list>
+        <ion-buttons class="submitBtn">
+          <ion-button fill="outline" (click)="submitService()" color="tertiary">
+            {{t('Submit')}}
+          </ion-button>
+        </ion-buttons>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- <div>{{username}}</div> -->
+  <ion-card
+    class="cardContainer"
+    *ngIf="userDetails.userDetails.role ==='service_provider'"
+  >
+    <ion-note class="cardTitle">{{t('Rest Time')}}: </ion-note>
+    <ion-item class="weekContainer" fill="outline">
+      <ion-input
+        type="text"
+        [(ngModel)]="userDetails.restTime.rest_remark"
+      ></ion-input>
+    </ion-item>
+
+    <ion-note class="cardTitle">{{t('Working Time')}}</ion-note>
+
+    <div *ngFor="let providerWorkingTime of userDetails.providerWorkingTime">
+      <ion-item-divider>
+        {{weekdayLabels[providerWorkingTime.week_day]}}
+      </ion-item-divider>
+
+      <ng-container
+        *ngIf="!providerWorkingTime.from_time && !providerWorkingTime.to_time"
+      >
+        <ion-note class="text">{{t('No need to work')}}</ion-note>
+
+        <ion-button
+          (click)="setWorkingTime(providerWorkingTime)"
+          fill="none"
+          class="editBtn"
+        >
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+      </ng-container>
+
+      <ng-container
+        *ngIf="providerWorkingTime.from_time && providerWorkingTime.to_time"
+      >
+        <ion-item>
+          <ion-label>{{t('Start Time')}}:</ion-label>
+          <ion-input
+            type="time"
+            [(ngModel)]="providerWorkingTime.from_time"
+          ></ion-input>
+          <ion-note slot="end">{{t('tap to select time')}}</ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>{{t('End Time')}}:</ion-label>
+          <ion-input
+            type="time"
+            [(ngModel)]="providerWorkingTime.to_time"
+          ></ion-input>
+          <ion-note slot="end">{{t('tap to select time')}}</ion-note>
+        </ion-item>
+        <ion-button
+          (click)="noWorkingTime(providerWorkingTime)"
+          fill="outline"
+          expand="block"
+          size="small"
+          class="textForColorPurple"
+        >
+          {{t('No work')}}
+        </ion-button>
+      </ng-container>
+    </div>
+    <br />
+    <ion-button
+      fill="solid"
+      color="medium"
+      expand="block"
+      (click)="updateWorkingTimeForServiceProvider()"
+    >
+      {{t('Update')}}
+    </ion-button>
+    <br />
+  </ion-card>
+</ion-content>

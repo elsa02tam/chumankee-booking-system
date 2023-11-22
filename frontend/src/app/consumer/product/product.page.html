@@ -1,0 +1,42 @@
+<ion-content *ngIf="!data"></ion-content>
+<ion-content *ngIf="data">
+  <h4 class="ion-text-center">{{t('Product')}}</h4>
+  <ion-searchbar
+    class="searchBar"
+    [placeholder]="t('Search Product Name')"
+    type="text"
+    [(ngModel)]="productName"
+    (ngModelChange)="searchBar()"
+  >
+  </ion-searchbar>
+
+  <ng-container *ngFor="let product of matchedResult; let i =index">
+    <ion-card class="cardContainer">
+      <div class="cardHeader">
+        {{t('Product Type')}}: {{product.product_type.type}}
+      </div>
+      <div class="generalImg">
+        <img
+          [src]="toImageSrc(product.pic)"
+          style="width: 15rem; height: 10rem; object-fit: cover"
+        />
+      </div>
+
+      <div class="text">{{product.id}}: {{product.name}}</div>
+      <div class="text">
+        <span style="color: #184371">{{t('Description')}}: </span>
+        {{product.desc}}
+      </div>
+      <div class="text">
+        <span style="color: #184371">{{t('Price')}}: </span>
+        ${{product.price}}
+      </div>
+      <ion-buttons class="btn">
+        <ion-button color="tertiary" (click)="addToShoppingCart(product.id)">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          {{t('Add to Cart')}}
+        </ion-button>
+      </ion-buttons>
+    </ion-card>
+  </ng-container>
+</ion-content>

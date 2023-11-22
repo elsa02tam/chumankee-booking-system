@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/consumer/profile"></ion-back-button>
+      <ion-title>{{t('Company Information')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="cardContainer" style="margin-top: 1rem">
+    <img src="/assets/company_logo.png" alt="Company Logo" />
+
+    <div class="cardHeader">Chu Man Kee Limited</div>
+    <div class="text">
+      <span style="color: #184371">{{t('Phone')}}: </span>
+      +852 9695 7888
+    </div>
+    <div class="text">
+      <span style="color: #184371">{{t('Email')}}: </span>
+      chumankeeltd@gmail.com
+    </div>
+    <div class="text">
+      <span style="color: #184371">{{t('Address')}}: </span>
+      G/F, SIN HUA MANSION, NO.103-105 MA TAU WAI ROAD, HUNG HOM, KL
+    </div>
+  </ion-card>
+  <ion-card class="cardContainer">
+    <div class="cardHeader ion-text-center">{{t('Operation Time')}}</div>
+
+    <ng-container *ngFor="let operationTime of company?.serviceTimes">
+      <ion-item-divider style="background-color: rgb(222, 223, 224)">
+        {{weekdayLabels[operationTime.week_day]}}
+      </ion-item-divider>
+      <ion-item
+        *ngIf="!operationTime.from_time || !operationTime.to_time"
+        style="color: red"
+        >*Closed</ion-item
+      >
+      <ion-item *ngIf="operationTime.from_time">
+        <ion-label>{{t('From')}}: {{operationTime.from_time}}</ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="operationTime.to_time">
+        <ion-label>{{t('To')}}: {{operationTime.to_time}}</ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-card>
+</ion-content>

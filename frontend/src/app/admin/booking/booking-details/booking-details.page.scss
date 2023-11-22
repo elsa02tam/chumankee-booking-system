@@ -1,0 +1,26 @@
+.week {
+  min-width: 3rem;
+  margin-right: 0;
+}
+
+.checkInBtn {
+  display: flex;
+  margin: 1em;
+  justify-content: center;
+}
+
+.updateBtn {
+  display: flex;
+  margin: 1em;
+  justify-content: center;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: space-around;
+  margin: 1rem;
+}
+
+.editBtn {
+  margin-left: 5rem;
+}

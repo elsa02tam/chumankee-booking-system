@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+code frontend
+code server

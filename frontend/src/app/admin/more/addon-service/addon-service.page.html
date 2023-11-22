@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Add-On Service Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading data')}}... </ion-content>
+<ion-content *ngIf="data">
+  <ion-buttons style="display: flex; justify-content: center; margin-top: 1rem">
+    <ion-button fill="outline" color="tertiary" (click)="addNewAddonService()"
+      >{{t('Add')}}</ion-button
+    >
+  </ion-buttons>
+  <ion-list *ngFor="let addOnService of data.addon_services">
+    <ion-card class="cardContainer">
+      <ion-item>
+        <ion-label position="stacked">{{t('From Service')}}</ion-label>
+
+        <ion-select [(ngModel)]="addOnService.from_service_id">
+          <ion-select-option
+            *ngFor="let service of data.services"
+            [value]="service.id"
+            >{{service.name}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{t('To Service')}}</ion-label>
+
+        <ion-select [(ngModel)]="addOnService.to_service_id">
+          <ion-select-option
+            *ngFor="let service of data.services"
+            [value]="service.id"
+            >{{service.name}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+  <ion-buttons
+    style="display: flex; justify-content: center; margin-bottom: 1rem"
+  >
+    <ion-button fill="outline" (click)="saveAddonServices()">
+      {{t('save all add-on services')}}
+    </ion-button>
+  </ion-buttons>
+</ion-content>

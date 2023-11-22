@@ -1,0 +1,5 @@
+.env
+uploads/
+dist/
+.vscode/settings.json
+sample-data.json

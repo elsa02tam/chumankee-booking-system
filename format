@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+cd frontend
+npm run format
+
+cd ../server
+npm run format
+npx ts-node src/core.ts

@@ -1,0 +1,196 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/consumer/booking"></ion-back-button>
+      <ion-title>{{t('Booking Details')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data"> {{t('Loading Booking Details')}}...</ion-content>
+<ion-content *ngIf="data">
+  <ion-card class="cardContainer">
+    <div style="display: flex; justify-content: center">
+      <img [src]="qrCodeDataUrl" style="max-width: 6rem; max-height: 6rem" />
+    </div>
+
+    <div class="cardHeader">{{id}}: {{data.booking.service.name}}</div>
+
+    <div class="text">
+      <span style="color: #184371"> {{t('Provider')}}: </span>
+      {{data.booking.provider.name}}
+    </div>
+    <div class="text">
+      <span style="color: #184371">{{t('Booked Time')}}: </span>
+      <div>
+        {{t('Hong Kong Time Zone')}} {{t('From')}} {{data.booking.from_time
+        |date:dateFormat}} {{t('To')}} {{data.booking.to_time |date:dateFormat}}
+      </div>
+    </div>
+    <div class="text">
+      <span style="color: #184371">{{t('Add-on Service')}}: </span>
+      <div *ngFor="let addon of data.booking.addon_services; let i =index">
+        ({{i+1}}) {{addon.name}}
+      </div>
+    </div>
+
+    <div class="text">
+      <span style="color: #184371">{{t('Price')}}: </span>
+      ${{data.booking.service.price}}
+    </div>
+
+    <div
+      *ngIf="!data.booking.deposit_amount && !data.booking.full_pay_deadline"
+      class="text"
+      style="color: red"
+    >
+      *{{t('Waiting admin to set deposit amount')}}*
+    </div>
+    <div *ngIf="data.booking.deposit_amount" class="text">
+      <div class="text">
+        {{t('Deposit Amount')}}: {{data.booking.deposit_amount}}
+      </div>
+      <div *ngIf="data.booking.paid_deposit_time" class="text">
+        {{t('Received Deposit Time')}}:
+        {{data.booking.paid_deposit_time|date:dateFormat}}
+      </div>
+      <div *ngIf="!data.booking.paid_deposit_time" class="text">
+        {{t('Deposit Deadline')}}: {{data.booking.deposit_deadline
+        |date:dateFormat}}
+        <ion-button fill="outline" color="secondary" size="small">
+          {{t('Pay Deposit')}} (Payme)
+        </ion-button>
+        <ion-button
+          [hidden]="shouldHide()"
+          (click)="pay('deposit')"
+          fill="outline"
+          color="secondary"
+          size="small"
+        >
+          {{t('Pay Deposit')}} (Stripe)
+        </ion-button>
+      </div>
+    </div>
+
+    <div *ngIf="!data.booking.full_pay_amount" class="text" style="color: red">
+      *{{t('Waiting admin to set full pay amount')}}*
+    </div>
+    <div *ngIf="data.booking.full_pay_amount" class="text">
+      <div class="text">
+        {{t('Full Pay Amount')}}: {{data.booking.full_pay_amount}}
+      </div>
+      <div *ngIf="data.booking.paid_fully_time" class="text">
+        {{t('Received Full Pay Time')}}:
+        {{data.booking.paid_fully_time|date:dateFormat}}
+      </div>
+      <div *ngIf="!data.booking.paid_fully_time" class="text">
+        {{t('Full Pay Deadline')}}: {{data.booking.full_pay_deadline
+        |date:dateFormat}}
+        <ion-button
+          fill="outline"
+          color="secondary"
+          size="small"
+          [disabled]="!data.booking.paid_deposit_time"
+        >
+          {{t('Full Pay')}} (Payme)
+        </ion-button>
+        <ion-button
+          [hidden]="shouldHide()"
+          (click)="pay('full-pay')"
+          fill="outline"
+          color="secondary"
+          size="small"
+          [disabled]="!data.booking.paid_deposit_time"
+        >
+          {{t('Full Pay')}} (Stripe)
+        </ion-button>
+      </div>
+    </div>
+    <div class="text">
+      <span class="textForColorBlue">{{t('Booking Status')}}: </span>
+
+      <span
+        *ngIf="!data.booking.booking_reject_time && !data.booking.booking_accept_time && !data.booking.booking_cancel_time"
+      >
+        {{t('Processing')}}
+      </span>
+
+      <span
+        class="textForColorRed"
+        *ngIf="data.booking.booking_reject_time && !data.booking.booking_accept_time && !data.booking.booking_cancel_time"
+        ><ion-icon name="alert-circle-sharp"></ion-icon>
+        {{t('Rejected')}}
+      </span>
+      <span
+        class="textForColorGreen"
+        *ngIf="!data.booking.booking_reject_time && data.booking.booking_accept_time && !data.booking.booking_cancel_time"
+        ><ion-icon name="checkmark-circle-sharp"></ion-icon
+        >{{t('Accepted')}}</span
+      >
+      <span
+        class="textForColorRed"
+        *ngIf="!data.booking.booking_reject_time && !data.booking.booking_accept_time && data.booking.booking_cancel_time"
+        ><ion-icon name="alert-circle-sharp"></ion-icon>{{t('Cancelled')}}</span
+      >
+    </div>
+
+    <ion-note
+      *ngIf="data.booking.booking_cancel_time && data.booking.refund_submit_time"
+      >{{t('Booking Cancelled and Processing Refund')}}</ion-note
+    >
+
+    <div style="background-color: aliceblue">
+      {{t('Reschedule')}}
+      <ion-icon
+        name="chevron-down-outline"
+        *ngIf="!isShowReschedule"
+        (click)="isShowReschedule = true"
+      ></ion-icon>
+      <ion-icon
+        name="chevron-up-outline"
+        *ngIf="isShowReschedule"
+        (click)="isShowReschedule = false"
+      ></ion-icon>
+    </div>
+
+    <span *ngIf="isShowReschedule">
+      <ion-item>
+        <ion-label position="stacked"> {{t('Booking Date')}}</ion-label>
+        <ion-input [(ngModel)]="selectedDate" type="date"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked"> {{t('Starting Time')}} </ion-label>
+        <ion-input [(ngModel)]="selectedStartTime" type="time"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked"> {{t('Finish Time')}} </ion-label>
+        <ion-input [(ngModel)]="selectedFinishTime" type="time"></ion-input>
+      </ion-item>
+      <ion-buttons style="display: flex; justify-content: center; margin: 1rem">
+        <ion-button
+          (click)="updateBookingTimeByConsumer(data.booking)"
+          fill="outline"
+          >{{t('Confirm Re-arrange')}}</ion-button
+        >
+      </ion-buttons>
+      <div style="background-color: aliceblue; height: 2rem"></div>
+    </span>
+
+    <img
+      src="/assets/payme_qrcode.png"
+      alt="Payme QR Code"
+      style="width: 12rem; height: 12rem; object-fit: cover"
+    />
+
+    <ion-buttons style="display: flex; justify-content: center; margin: 1rem">
+      <ion-button
+        fill="outline"
+        (click)="cancelBooking(data.booking)"
+        *ngIf="!data.booking.booking_reject_time || data.booking.booking_accept_time"
+        [disabled]="isCancelDisabled()"
+        >{{t('Cancel Booking')}}</ion-button
+      >
+    </ion-buttons>
+  </ion-card>
+</ion-content>

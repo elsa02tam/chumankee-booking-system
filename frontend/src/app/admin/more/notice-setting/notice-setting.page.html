@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Notice Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading data')}}... </ion-content>
+
+<ion-content *ngIf="data">
+  <ion-buttons style="display: flex; justify-content: center; margin-top: 1rem">
+    <ion-button fill="outline" color="tertiary" (click)="addNewNotice()"
+      >{{t('Add')}}</ion-button
+    >
+  </ion-buttons>
+
+  <ion-list *ngFor="let notice of data.notice">
+    <ion-card class="cardContainer">
+      <ion-item>
+        <ion-label position="stacked">{{t('Title')}}</ion-label>
+        <ion-input
+          [(ngModel)]="notice.title"
+          type="text"
+          [placeholder]="t('Enter text')"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{t('Content')}}</ion-label>
+        <ion-input
+          [(ngModel)]="notice.content"
+          type="text"
+          [placeholder]="t('Enter text')"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{t('Publish Time')}}</ion-label>
+        <ion-input
+          type="datetime-local"
+          [(ngModel)]="notice.publish_time"
+        ></ion-input>
+      </ion-item>
+      <ion-buttons style="display: flex; justify-content: center; margin: 1rem">
+        <ion-button fill="outline" size="small" (click)="updateNotice(notice)">
+          {{t('Update')}}
+        </ion-button>
+        <ion-button
+          fill="outline"
+          size="small"
+          (click)="deleteNotice(notice.id)"
+          >{{t('Delete')}}</ion-button
+        >
+      </ion-buttons>
+    </ion-card>
+  </ion-list>
+</ion-content>

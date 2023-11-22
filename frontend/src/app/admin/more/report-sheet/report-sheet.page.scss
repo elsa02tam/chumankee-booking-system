@@ -1,0 +1,32 @@
+.balanceSheetCard {
+  background: white;
+  margin: 2rem;
+  box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16), 0 2px 20px 0 rgba(0, 0, 0, 0.12);
+}
+
+.balanceSheetHeader {
+  text-align: center;
+  color: #636363;
+  padding: 1rem 0;
+  background-color: #cecece;
+}
+
+.allText {
+  margin: 0 2rem;
+}
+
+.subTitle {
+  color: #636363;
+  font-size: 0.9rem;
+  border-bottom: double;
+  max-width: fit-content;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+}
+
+.subDetails {
+  margin-left: 1rem;
+}

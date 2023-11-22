@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/consumer/profile"></ion-back-button>
+      <ion-title>{{t('Notice Center')}} - {{t('Notice List')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading data')}}... </ion-content>
+
+<ion-content *ngIf="data">
+  <ion-list *ngFor="let notice of data.notice; let i = index">
+    <ion-card class="cardContainer">
+      <div class="cardHeader">{{t('Notice')}} {{i+1}}</div>
+
+      <div class="text">
+        <span class="textForColorBlue">{{t('Title')}}: </span>
+        {{notice.title}}
+      </div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Content')}}: </span>
+        {{notice.content}}
+      </div>
+      <div class="text">
+        <span class="textForColorBlue">{{t('Publish Time')}}: </span>
+        {{notice.publish_time |date:dateFormat}}
+      </div>
+    </ion-card>
+  </ion-list>
+</ion-content>

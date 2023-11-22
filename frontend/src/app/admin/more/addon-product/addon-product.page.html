@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button defaultHref="/admin/more"></ion-back-button>
+      <ion-title>{{t('Add-On Product Setting')}}</ion-title>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!data">{{t('Loading data')}}... </ion-content>
+
+<ion-content *ngIf="data">
+  <ion-buttons style="display: flex; justify-content: center; margin-top: 1rem">
+    <ion-button fill="outline" color="tertiary" (click)="addNewAddonProduct()"
+      >{{t('Add')}}</ion-button
+    >
+  </ion-buttons>
+  <ion-list *ngFor="let addOnProduct of data.addon_products">
+    <ion-card class="cardContainer">
+      <ion-item>
+        <ion-label position="stacked">{{t('From Product')}}</ion-label>
+
+        <ion-select [(ngModel)]="addOnProduct.from_product_id">
+          <ion-select-option
+            *ngFor="let product of data.products"
+            [value]="product.id"
+            >{{product.name}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">{{t('To Product')}}</ion-label>
+
+        <ion-select [(ngModel)]="addOnProduct.to_product_id">
+          <ion-select-option
+            *ngFor="let product of data.products"
+            [value]="product.id"
+            >{{product.name}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-card>
+  </ion-list>
+  <ion-buttons
+    style="display: flex; justify-content: center; margin-bottom: 1rem"
+  >
+    <ion-button fill="outline" (click)="saveAddonProducts()">
+      {{t('save all add-on products')}}
+    </ion-button>
+  </ion-buttons>
+</ion-content>
